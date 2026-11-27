@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Investimentos · várias corretoras (mockups)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens do rule.md (tema escuro preto + verde) */
+:root {
+  --bg: #080a09; --card: #101513; --card-2: #18201c; --ink: #eef4f0; --ink-2: #c2cdc7; --muted: #7d8a84;
+  --line: rgba(255,255,255,.09); --hair: rgba(255,255,255,.06);
+  --accent: #2ecc8a; --pos: #3ddc97; --neg: #ff6b6b; --warn: #f5b84b;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: #050706; }
+body { margin: 0; font-family: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+b { font-weight: 700; }
+
+/* ---------- Página de apresentação (fora dos mockups) ---------- */
+.doc { max-width: 1240px; margin: 0 auto; padding: 40px 24px 80px; }
+.doc > h1 { font-size: 30px; font-weight: 800; letter-spacing: -.03em; margin: 0 0 8px; }
+.doc > p { color: var(--ink-2); font-size: 14px; line-height: 1.6; max-width: 760px; margin: 0 0 8px; }
+.sec { margin-top: 56px; }
+.sec-h { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin: 0 0 6px; }
+.sec-h h2 { font-size: 18px; font-weight: 800; letter-spacing: -.015em; margin: 0; }
+.sec-h .k { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .04em; }
+.sec > p { color: var(--muted); font-size: 13px; line-height: 1.55; margin: 0 0 16px; max-width: 820px; }
+.stage { width: 100%; overflow: hidden; border-radius: 16px; box-shadow: 0 0 0 1px var(--line); }
+.stage > .frame { transform-origin: top left; }
+.stage.m { width: 375px; max-width: 100%; }
+
+/* ---------- Moldura = ecrã da app (o fundo do <html> da app) ---------- */
+.frame { width: 1440px; padding: 20px 40px 48px; position: relative; font-variant-numeric: tabular-nums;
+  background:
+    radial-gradient(140% 70% at 50% 108%, rgba(24,140,92,.62), rgba(24,140,92,.18) 45%, transparent 72%),
+    linear-gradient(180deg, #0c0607 0%, #080a09 30%, #0a1a13 70%, #0f3324 100%); }
+.frame.m { width: 375px; padding: 0 16px 104px; }
+
+/* Barra de topo */
+.top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding: 4px 0 18px; }
+.brand { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); }
+.brand svg { width: 26px; height: 26px; }
+.bm-m { fill: var(--ink); } .bm-coin { fill: var(--accent); }
+.brand-txt { font-size: 18px; font-weight: 800; letter-spacing: -.035em; }
+.nav { display: flex; gap: 2px; padding: 5px; border-radius: 99px; background: rgba(255,255,255,.04); box-shadow: 0 0 0 1px var(--hair); }
+.nav a { padding: 8px 18px; border-radius: 99px; font-size: 14px; font-weight: 500; color: var(--ink-2); letter-spacing: -.01em; white-space: nowrap; }
+.nav a.on { background: #eef4f0; color: #06120c; }
+.tools { justify-self: end; display: flex; align-items: center; gap: 10px; }
+.round { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.04); box-shadow: 0 0 0 1px var(--hair); color: var(--ink); }
+.round svg { width: 18px; height: 18px; }
+.cta { height: 38px; padding: 0 18px; border-radius: 12px; display: inline-flex; align-items: center; font-weight: 700; font-size: 14px;
+  background: linear-gradient(180deg, #4be3a2, #22b277); color: #03140c; box-shadow: 0 6px 16px rgba(46,204,138,.2); }
+
+/* Cabeçalho da página */
+.page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin: 8px 4px 22px; }
+.eyebrow { font-size: 13px; color: var(--muted); font-weight: 500; }
+.page-title { font-size: 40px; font-weight: 800; letter-spacing: -.04em; line-height: 44px; margin: 4px 0 0; }
+.inv-totals { display: flex; align-items: flex-end; gap: 36px; }
+.inv-totals > div { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.inv-totals span { font-size: 12px; color: var(--muted); font-weight: 500; }
+.inv-totals b { font-size: 22px; font-weight: 800; letter-spacing: -.02em; color: var(--ink-2); }
+.inv-totals .it-main b { font-size: 34px; letter-spacing: -.03em; line-height: 38px; color: var(--ink); }
+.inv-totals b.pos { color: var(--pos); } .inv-totals b.neg { color: var(--neg); }
+.inv-totals small { font-size: 11px; color: var(--muted); }
+
+.card { background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0) 45%), var(--card); border-radius: 18px; box-shadow: 0 0 0 1px var(--hair); }
+.pos { color: var(--pos); } .neg { color: var(--neg); }
+.tsub { color: var(--muted); }
+.seg { display: inline-flex; background: var(--card-2); border-radius: 10px; padding: 3px; gap: 2px; }
+.seg span { padding: 4px 10px; border-radius: 7px; color: var(--ink-2); font-size: 12px; }
+.seg span.on { background: #eef4f0; color: #06120c; font-weight: 600; }
+
+/* ---------- Corretoras (direção A): separadores Todas / Trading 212 / IBKR ---------- */
+.ib-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: -6px 0 22px; padding: 0 4px; }
+.ib-tabs { display: flex; gap: 6px; padding: 4px; border-radius: 16px; background: rgba(255,255,255,.035); border: 1px solid var(--hair); }
+.ib-tab { display: grid; grid-template-columns: auto auto; grid-template-areas: "n v" "s s"; align-items: baseline; column-gap: 8px; row-gap: 1px;
+  padding: 8px 14px; border-radius: 12px; color: var(--ink-2); white-space: nowrap; min-height: 44px; }
+.ib-n { grid-area: n; font-size: 13px; font-weight: 600; }
+.ib-tab > b { grid-area: v; font-size: 13px; font-weight: 800; color: var(--ink); }
+.ib-s { grid-area: s; font-size: 11px; color: var(--muted); display: inline-flex; align-items: center; gap: 5px; }
+.ib-s::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--pos); }
+.ib-s.none::before { display: none; }
+.ib-tab.on { background: #eef4f0; color: #06120c; }
+.ib-tab.on > b, .ib-tab.on .ib-n { color: #06120c; } .ib-tab.on .ib-s { color: #3d4a43; }
+.ib-hint { margin: 0; font-size: 12px; line-height: 18px; color: var(--muted); max-width: 360px; text-align: right; }
+.ib-tag { display: inline-block; padding: 2px 6px; border-radius: 5px; background: rgba(255,255,255,.07); color: var(--ink); font-size: 10px; font-weight: 800; letter-spacing: .02em; line-height: 14px; text-align: center; }
+
+/* ---------- Ledger (igual a public/index.html) ---------- */
+.lg-strip { display: flex; flex-direction: column; gap: 12px; padding: 0 4px; margin-bottom: 28px; }
+.lg-bar { display: flex; gap: 3px; height: 14px; }
+.lg-bar span { flex-basis: 0; border-radius: 4px; min-width: 3px; }
+.lg-cap { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 12px; }
+.lg-cap b { color: var(--ink); font-weight: 700; }
+.lg-body { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; align-items: start; }
+.lg-table { padding: 8px 20px; display: flex; flex-direction: column; }
+.lg-row { display: flex; align-items: center; width: 100%; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,.06); color: var(--ink); font-size: 13px; }
+.lg-row.open { border-bottom-color: transparent; }
+.lg-table > .lg-row:last-child { border-bottom: 0; }
+.lg-h { padding: 12px 0; border-bottom-color: rgba(255,255,255,.09); color: var(--muted); font-size: 12px; font-weight: 600; }
+.lg-row > span { flex-shrink: 0; }
+.c-pos { width: 250px; display: flex; align-items: center; gap: 10px; min-width: 0; }
+.c-org { width: 96px; display: flex; gap: 4px; }
+.c-pr, .c-val { width: 120px; text-align: right; }
+.c-pr { color: var(--ink-2); }
+.c-pl { width: 170px; text-align: right; font-weight: 600; }
+.c-w { width: 90px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+.c-sec { flex: 1 0 0 !important; text-align: right; color: var(--ink-2); font-size: 12px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 10px; }
+.lg-h .c-sec { color: var(--muted); }
+.tk { width: 30px; height: 30px; border-radius: 9px; background: #f4f7f5; color: #080a09; font-size: 8.5px; font-weight: 800; display: grid; place-items: center; flex-shrink: 0; }
+.lg-n { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.lg-n b { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lg-n .tsub { font-size: 12px; white-space: nowrap; }
+.lg-wbar { width: 36px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.08); display: flex; }
+.lg-wbar span { border-radius: 2px; }
+.lg-detail { display: grid; grid-template-columns: 160px 200px minmax(0, 1fr); gap: 10px; padding: 4px 0 14px 40px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.lg-detail > div { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-radius: 12px; background: #18201c; font-size: 13px; }
+.lg-detail b { font-weight: 800; }
+.lg-detail .tsub { font-size: 12px; }
+.lg-tax span:last-child { color: var(--ink-2); line-height: 1.5; }
+.lg-split { grid-column: 1 / -1; gap: 8px !important; }
+.lg-sp { display: grid; grid-template-columns: 44px minmax(0, 1fr) 90px 70px; gap: 10px; align-items: center; }
+.lg-sp > :nth-child(3) { text-align: right; font-weight: 800; }
+.lg-sp > :last-child { text-align: right; font-weight: 600; }
+.lg-sp .tsub { font-size: 12px; }
+
+/* Coluna da direita */
+.lg-rail { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+.lg-rail-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.lg-rail-t { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: -.01em; }
+.lg-stack { display: flex; gap: 2px; height: 10px; border-radius: 5px; overflow: hidden; }
+.lg-stack span { flex-basis: 0; min-width: 2px; }
+.lg-groups { display: flex; flex-direction: column; gap: 12px; font-size: 13px; }
+.lg-grp { display: flex; align-items: center; gap: 10px; }
+.lg-sq { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.lg-gn { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lg-gv { color: var(--ink-2); }
+.lg-grp b { width: 44px; text-align: right; font-weight: 700; }
+.lg-note { padding: 14px; border-radius: 12px; background: #18201c; color: var(--ink-2); font-size: 12px; line-height: 18px; }
+.lg-note-t { color: var(--ink); font-weight: 700; } .lg-note-t.warn { color: var(--warn); }
+
+/* Bloco "Corretoras" na coluna */
+.ib-rail { display: flex; flex-direction: column; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--hair); }
+.ib-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
+.ib-row .ib-tag { margin-top: 1px; }
+.ib-rn, .ib-rv { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 13px; }
+.ib-rn .tsub, .ib-rv .tsub { font-size: 11px; line-height: 15px; }
+.ib-rv { align-items: flex-end; text-align: right; } .ib-rv b, .ib-rn b { font-weight: 800; }
+.ib-ok { display: inline-flex; align-items: center; gap: 5px; }
+.ib-ok::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--pos); }
+.ib-fx { margin: -4px 0 0 50px; padding: 8px 10px; border-radius: 8px; background: #18201c; }
+.ib-fx .tsub { font-size: 11px; line-height: 15px; color: var(--ink-2); }
+.flt-on .c-org { display: none; }
+.m .inv-totals .it-main b { font-size: 30px; line-height: 34px; }
+.ib-tot { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); padding-top: 2px; }
+.ib-tot b { color: var(--ink); font-weight: 800; font-size: 13px; }
+.cash { display: flex; flex-direction: column; gap: 10px; }
+.cash-r { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-size: 13px; }
+.cash-r b { font-weight: 800; text-align: right; }
+.cash-r .tsub { font-size: 11px; grid-column: 1 / -1; }
+
+/* ---------- Direção B: barra por corretora + coluna Origem ---------- */
+.bk { display: flex; flex-direction: column; gap: 12px; padding: 0 4px; margin-bottom: 18px; }
+.bk-bar { display: flex; gap: 4px; height: 14px; }
+.bk-bar span { flex-basis: 0; border-radius: 4px; }
+.bk-legs { display: flex; gap: 4px; }
+.bk-leg { flex-basis: 0; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px var(--hair); }
+.bk-leg.on { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(238,244,240,.35); }
+.bk-leg.off { opacity: .45; }
+.bk-top { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.bk-top .nm { font-weight: 700; }
+.bk-top .sh { margin-left: auto; color: var(--ink-2); font-weight: 700; }
+.bk-val { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+.bk-meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.bk-meta .pos { font-weight: 600; }
+.flt { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 4px; margin-bottom: 14px; min-height: 32px; }
+.flt p { margin: 0; font-size: 12px; color: var(--muted); }
+.chip { display: inline-flex; align-items: center; gap: 10px; padding: 6px 8px 6px 12px; border-radius: 10px; background: #eef4f0; color: #06120c; font-size: 13px; font-weight: 700; }
+.chip i { font-style: normal; font-weight: 600; font-size: 12px; padding: 3px 8px; border-radius: 6px; background: rgba(6,18,12,.08); }
+
+/* ---------- Telemóvel (375) ---------- */
+.m .top { grid-template-columns: auto 1fr; padding: 12px 0 10px; }
+.m .brand svg { width: 30px; height: 30px; }
+.m .tools { gap: 6px; }
+.m .round { width: 44px; height: 44px; }
+.m .cta { height: 44px; padding: 0 14px; }
+.m .page-head { flex-direction: column; align-items: stretch; gap: 16px; margin: 6px 0 18px; }
+.m .page-title { font-size: 34px; line-height: 38px; }
+.m .inv-totals { flex-wrap: wrap; gap: 14px 22px; }
+.m .inv-totals > div { align-items: flex-start; }
+.m .inv-totals .it-main { width: 100%; }
+.m .inv-totals b { font-size: 17px; }
+.m .ib-bar { flex-direction: column; align-items: stretch; margin: 0 0 18px; padding: 0; gap: 8px; }
+.m .ib-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.m .ib-tab { grid-template-columns: 1fr; grid-template-areas: "n" "v" "s"; padding: 8px 10px; }
+.m .ib-hint { text-align: left; max-width: none; }
+.m .lg-strip { padding: 0; margin-bottom: 18px; }
+.m .lg-cap { flex-direction: column; gap: 4px; }
+.m .lg-body { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.m .lg-table { padding: 4px 14px; }
+.m .c-pos { flex: 1 1 auto !important; width: auto; }
+.m .c-val { width: 74px; }
+.m .c-pl { width: 62px; }
+.m .lg-detail { padding-left: 0; grid-template-columns: 1fr 1fr; }
+.m .lg-tax { grid-column: 1 / -1; }
+.m .lg-sp { grid-template-columns: 40px minmax(0, 1fr) auto; row-gap: 2px; }
+.m .lg-sp > :last-child { grid-column: 2 / -1; text-align: left; font-size: 12px; }
+.m .lg-rail { padding: 18px; }
+.bbar { position: absolute; left: 10px; right: 10px; bottom: 12px; display: flex; justify-content: space-between; padding: 6px; border-radius: 22px;
+  background: rgba(12,16,14,.82); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: 0 0 0 1px var(--hair); }
+.bbar a { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 0; border-radius: 16px; font-size: 10.5px; font-weight: 600; color: var(--ink-2); }
+.bbar a svg { width: 20px; height: 20px; }
+.bbar a.on { background: rgba(255,255,255,.07); color: var(--ink); }
+.bbar a.on svg { color: var(--accent); }
+</style>
+</head>
+<body>
+<main class="doc">
+  <h1>Investimentos com várias corretoras</h1>
+  <p>Trading 212 e Interactive Brokers na mesma página. Duas direções, cada uma com o estado "Todas" (carteira junta) e um estado de uma só corretora. Dados fictícios, valores em euros.</p>
+  <p>Regras que valem para as duas: o mesmo ticker nas duas corretoras é uma só linha em "Todas", com a divisão ao abrir; cada corretora diz quando foi lida; o dinheiro em dólares aparece em dólares e convertido.</p>
+
+  <!-- =============================== A · TODAS =============================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="k">A · SEPARADOR POR CORRETORA</span><h2>Todas (1440)</h2></div>
+    <p>O Ledger atual fica igual. Por cima, três separadores com o valor e a frescura de cada um. VWCE aberto: 28 un. no total, divididas pelas duas corretoras.</p>
+    <div class="stage"><div class="frame">
+      <header class="top">
+        <span class="brand"><svg viewBox="0 0 256 256"><path class="bm-m" d="M54 40 H202 A14 14 0 0 1 216 54 V202 A14 14 0 0 1 202 216 H178 A14 14 0 0 1 164 202 V100 L139 132 Q128 146 117 132 L92 100 V202 A14 14 0 0 1 78 216 H54 A14 14 0 0 1 40 202 V54 A14 14 0 0 1 54 40 Z"/><circle class="bm-coin" cx="128" cy="186" r="24"/></svg><span class="brand-txt">moneta</span></span>
+        <nav class="nav"><a>Visão geral</a><a class="on">Investimentos</a><a>Impostos</a><a>Poupança</a><a>Objetivos</a><a>Assistente</a><a>Recursos</a></nav>
+        <div class="tools">
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg></span>
+          <span class="cta">Adicionar</span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span>
+        </div>
+      </header>
+      <div class="page-head">
+        <div><div class="eyebrow">2 corretoras · 7 posições</div><h1 class="page-title">Investimentos</h1></div>
+        <div class="inv-totals">
+          <div class="it-main"><span>Valor total</span><b>15 518 €</b></div>
+          <div><span>Lucro em aberto</span><b class="pos">+960 € · 7,2%</b></div>
+          <div><span>Investido</span><b>13 380 €</b></div>
+          <div><span>Dinheiro livre</span><b>1 178 €</b></div>
+        </div>
+      </div>
+      <div class="ib-bar">
+        <div class="ib-tabs">
+          <div class="ib-tab on"><span class="ib-n">Todas</span><b>15 518 €</b><span class="ib-s none">7 posições</span></div>
+          <div class="ib-tab"><span class="ib-n">Trading 212</span><b>9 410 €</b><span class="ib-s">Atualizado há 5 min</span></div>
+          <div class="ib-tab"><span class="ib-n">IBKR</span><b>6 108 €</b><span class="ib-s">Extrato de ontem</span></div>
+        </div>
+        <p class="ib-hint">A IBKR envia um extrato por dia, por isso os valores dela são do fecho de 26/11. A Trading 212 é lida ao minuto.</p>
+      </div>
+      <div class="lg-strip">
+        <div class="lg-bar"><span style="flex-grow:25.9;background:#2ecc8a"></span><span style="flex-grow:20.7;background:#60a5fa"></span><span style="flex-grow:17;background:#f5b84b"></span><span style="flex-grow:12.8;background:#a78bfa"></span><span style="flex-grow:8.6;background:#fb7185"></span><span style="flex-grow:8.2;background:#2dd4bf"></span><span style="flex-grow:6.7;background:#fb923c"></span></div>
+        <div class="lg-cap"><span>Peso de cada posição na carteira investida das duas corretoras (14 340 €)</span><span>Maior posição: <b>VWCE 25,9%</b> · 5 maiores: <b>85%</b></span></div>
+      </div>
+      <div class="lg-body">
+        <section class="card lg-table">
+          <div class="lg-row lg-h"><span class="c-pos">Posição</span><span class="c-pr">Preço atual</span><span class="c-val">Valor (€)</span><span class="c-pl">Lucro / prejuízo (€)</span><span class="c-w">Peso</span><span class="c-sec">Setor</span></div>
+          <div class="lg-row open"><span class="c-pos"><span class="tk">VWCE</span><span class="lg-n"><b>Vanguard FTSE All-World</b><span class="tsub">ETF · 28,00 un. · T212 e IBKR</span></span></span><span class="c-pr">132,50 €</span><span class="c-val"><b>3 710 €</b></span><span class="c-pl pos">+395 € · +11,9%</span><span class="c-w"><span class="lg-wbar"><span style="width:100%;background:#2ecc8a"></span></span>25,9%</span><span class="c-sec">ETF diversificado</span></div>
+          <div class="lg-detail">
+            <div class="lg-split"><span class="tsub">Onde está</span>
+              <div class="lg-sp"><span class="ib-tag">T212</span><span>16,00 un. · custo médio 116,90 € <span class="tsub">· há 5 min</span></span><span>2 120 €</span><span class="pos">+250 €</span></div>
+              <div class="lg-sp"><span class="ib-tag">IBKR</span><span>12,00 un. · custo médio 120,40 € <span class="tsub">· fecho de 26/11</span></span><span>1 590 €</span><span class="pos">+145 €</span></div>
+            </div>
+            <div><span class="tsub">Custo médio (junto)</span><b>118,39 €</b><span class="tsub pos">preço +11,9% acima</span></div>
+            <div><span class="tsub">Dividendos</span><b>Acumula</b><span class="tsub">Não paga, reinveste</span></div>
+            <div class="lg-tax"><span class="tsub">Impostos</span><span>Se vendesses hoje, pagavas cerca de 111 € (28% de 395 €) no anexo J. Cada corretora declara o seu lote, com o seu custo.</span></div>
+          </div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">AAPL</span><span class="lg-n"><b>Apple</b><span class="tsub">Ação · 14,00 un. · T212</span></span></span><span class="c-pr">229,10 US$</span><span class="c-val"><b>2 970 €</b></span><span class="c-pl pos">+540 € · +22,2%</span><span class="c-w"><span class="lg-wbar"><span style="width:79.9%;background:#60a5fa"></span></span>20,7%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">MSFT</span><span class="lg-n"><b>Microsoft</b><span class="tsub">Ação · 5,85 un. · T212</span></span></span><span class="c-pr">451,30 US$</span><span class="c-val"><b>2 440 €</b></span><span class="c-pl pos">+410 € · +20,2%</span><span class="c-w"><span class="lg-wbar"><span style="width:65.6%;background:#f5b84b"></span></span>17,0%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">ASML</span><span class="lg-n"><b>ASML</b><span class="tsub">Ação · 2,80 un. · IBKR</span></span></span><span class="c-pr">658,10 €</span><span class="c-val"><b>1 840 €</b></span><span class="c-pl neg">−90 € · −4,7%</span><span class="c-w"><span class="lg-wbar"><span style="width:49.4%;background:#a78bfa"></span></span>12,8%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">NOVO</span><span class="lg-n"><b>Novo Nordisk</b><span class="tsub">Ação · 13,40 un. · T212</span></span></span><span class="c-pr">92,40 €</span><span class="c-val"><b>1 240 €</b></span><span class="c-pl neg">−310 € · −20,0%</span><span class="c-w"><span class="lg-wbar"><span style="width:33.2%;background:#fb7185"></span></span>8,6%</span><span class="c-sec">Saúde</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">EDP</span><span class="lg-n"><b>EDP</b><span class="tsub">Ação · 318,00 un. · IBKR</span></span></span><span class="c-pr">3,72 €</span><span class="c-val"><b>1 180 €</b></span><span class="c-pl pos">+60 € · +5,4%</span><span class="c-w"><span class="lg-wbar"><span style="width:31.7%;background:#2dd4bf"></span></span>8,2%</span><span class="c-sec">Utilities</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">GALP</span><span class="lg-n"><b>Galp Energia</b><span class="tsub">Ação · 60,00 un. · IBKR</span></span></span><span class="c-pr">16,07 €</span><span class="c-val"><b>960 €</b></span><span class="c-pl neg">−45 € · −4,5%</span><span class="c-w"><span class="lg-wbar"><span style="width:25.9%;background:#fb923c"></span></span>6,7%</span><span class="c-sec">Energia</span></div>
+        </section>
+        <aside class="card lg-rail">
+          <div class="ib-rail">
+            <h2 class="lg-rail-t">Corretoras</h2>
+            <div class="ib-row"><span class="ib-tag">T212</span><span class="ib-rn"><b>Trading 212</b><span class="tsub ib-ok">Atualizado há 5 min</span></span><span class="ib-rv"><b>9 410 €</b><span class="tsub">640 € livres</span></span></div>
+            <div class="ib-row"><span class="ib-tag">IBKR</span><span class="ib-rn"><b>Interactive Brokers</b><span class="tsub ib-ok">Extrato de ontem</span></span><span class="ib-rv"><b>6 108 €</b><span class="tsub">538 € livres</span></span></div>
+            <div class="ib-fx"><span class="tsub">Dinheiro na IBKR: 150,00 € e 420,00 US$ (≈ 388 € ao câmbio de 26/11)</span></div>
+            <div class="ib-tot"><span>Dinheiro livre nas duas</span><b>1 178 €</b></div>
+          </div>
+          <div class="lg-rail-h"><h2 class="lg-rail-t">Setores</h2><span class="seg"><span class="on">Setor</span><span>Tipo</span></span></div>
+          <div class="lg-stack"><span style="flex-grow:50.6;background:#60a5fa"></span><span style="flex-grow:25.9;background:#2dd4bf"></span><span style="flex-grow:8.6;background:#2ecc8a"></span><span style="flex-grow:8.2;background:#22d3ee"></span><span style="flex-grow:6.7;background:#fb923c"></span></div>
+          <div class="lg-groups">
+            <div class="lg-grp"><span class="lg-sq" style="background:#60a5fa"></span><span class="lg-gn">Tecnologia</span><span class="lg-gv">7 250 €</span><b>50,6%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2dd4bf"></span><span class="lg-gn">ETF diversificado</span><span class="lg-gv">3 710 €</span><b>25,9%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2ecc8a"></span><span class="lg-gn">Saúde</span><span class="lg-gv">1 240 €</span><b>8,6%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#22d3ee"></span><span class="lg-gn">Utilities</span><span class="lg-gv">1 180 €</span><b>8,2%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#fb923c"></span><span class="lg-gn">Energia</span><span class="lg-gv">960 €</span><b>6,7%</b></div>
+          </div>
+          <div class="lg-note"><span class="lg-note-t warn">Concentração.</span> Tecnologia pesa 50,6% da carteira junta; o VWCE sozinho vale 25,9%.</div>
+        </aside>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- =============================== A · IBKR =============================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="k">A · SEPARADOR POR CORRETORA</span><h2>IBKR selecionada (1440)</h2></div>
+    <p>Os números de cima, a faixa e a coluna passam a ser só da IBKR. A coluna troca "Corretoras" pelo dinheiro desta conta, moeda a moeda. EDP aberta: dividendos e nota de impostos continuam iguais.</p>
+    <div class="stage"><div class="frame">
+      <header class="top">
+        <span class="brand"><svg viewBox="0 0 256 256"><path class="bm-m" d="M54 40 H202 A14 14 0 0 1 216 54 V202 A14 14 0 0 1 202 216 H178 A14 14 0 0 1 164 202 V100 L139 132 Q128 146 117 132 L92 100 V202 A14 14 0 0 1 78 216 H54 A14 14 0 0 1 40 202 V54 A14 14 0 0 1 54 40 Z"/><circle class="bm-coin" cx="128" cy="186" r="24"/></svg><span class="brand-txt">moneta</span></span>
+        <nav class="nav"><a>Visão geral</a><a class="on">Investimentos</a><a>Impostos</a><a>Poupança</a><a>Objetivos</a><a>Assistente</a><a>Recursos</a></nav>
+        <div class="tools">
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg></span>
+          <span class="cta">Adicionar</span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span>
+        </div>
+      </header>
+      <div class="page-head">
+        <div><div class="eyebrow">Interactive Brokers · 4 posições</div><h1 class="page-title">Investimentos</h1></div>
+        <div class="inv-totals">
+          <div class="it-main"><span>Valor da conta</span><b>6 108 €</b></div>
+          <div><span>Lucro em aberto</span><b class="pos">+70 € · 1,3%</b></div>
+          <div><span>Investido</span><b>5 500 €</b></div>
+          <div><span>Dinheiro livre</span><b>538 €</b></div>
+        </div>
+      </div>
+      <div class="ib-bar">
+        <div class="ib-tabs">
+          <div class="ib-tab"><span class="ib-n">Todas</span><b>15 518 €</b><span class="ib-s none">7 posições</span></div>
+          <div class="ib-tab"><span class="ib-n">Trading 212</span><b>9 410 €</b><span class="ib-s">Atualizado há 5 min</span></div>
+          <div class="ib-tab on"><span class="ib-n">IBKR</span><b>6 108 €</b><span class="ib-s">Extrato de ontem</span></div>
+        </div>
+        <p class="ib-hint">Valores do extrato Flex de 26/11, fecho do mercado. O próximo chega amanhã de manhã.</p>
+      </div>
+      <div class="lg-strip">
+        <div class="lg-bar"><span style="flex-grow:33;background:#2ecc8a"></span><span style="flex-grow:28.5;background:#60a5fa"></span><span style="flex-grow:21.2;background:#f5b84b"></span><span style="flex-grow:17.2;background:#a78bfa"></span></div>
+        <div class="lg-cap"><span>Peso de cada posição na conta IBKR (5 570 € investidos)</span><span>Maior posição: <b>ASML 33,0%</b> · 1 posição também na T212: <b>VWCE</b></span></div>
+      </div>
+      <div class="lg-body">
+        <section class="card lg-table">
+          <div class="lg-row lg-h"><span class="c-pos">Posição</span><span class="c-pr">Preço (fecho)</span><span class="c-val">Valor (€)</span><span class="c-pl">Lucro / prejuízo (€)</span><span class="c-w">Peso</span><span class="c-sec">Setor</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">ASML</span><span class="lg-n"><b>ASML</b><span class="tsub">Ação · 2,80 un.</span></span></span><span class="c-pr">658,10 €</span><span class="c-val"><b>1 840 €</b></span><span class="c-pl neg">−90 € · −4,7%</span><span class="c-w"><span class="lg-wbar"><span style="width:100%;background:#2ecc8a"></span></span>33,0%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">VWCE</span><span class="lg-n"><b>Vanguard FTSE All-World</b><span class="tsub">ETF · 12,00 un. · mais 16,00 na T212</span></span></span><span class="c-pr">132,50 €</span><span class="c-val"><b>1 590 €</b></span><span class="c-pl pos">+145 € · +10,0%</span><span class="c-w"><span class="lg-wbar"><span style="width:86.4%;background:#60a5fa"></span></span>28,5%</span><span class="c-sec">ETF diversificado</span></div>
+          <div class="lg-row open"><span class="c-pos"><span class="tk">EDP</span><span class="lg-n"><b>EDP</b><span class="tsub">Ação · 318,00 un.</span></span></span><span class="c-pr">3,72 €</span><span class="c-val"><b>1 180 €</b></span><span class="c-pl pos">+60 € · +5,4%</span><span class="c-w"><span class="lg-wbar"><span style="width:64.2%;background:#f5b84b"></span></span>21,2%</span><span class="c-sec">Utilities</span></div>
+          <div class="lg-detail">
+            <div><span class="tsub">Custo médio</span><b>3,52 €</b><span class="tsub pos">preço +5,4% acima</span></div>
+            <div><span class="tsub">Dividendos</span><b>Anual · maio</b><span class="tsub">Último: 62,01 € a 07/05</span></div>
+            <div class="lg-tax"><span class="tsub">Impostos</span><span>Se vendesses hoje, pagavas cerca de 17 € (28% de 60 €) no anexo J. Os dividendos da EDP já vêm com 28% retidos em Portugal.</span></div>
+          </div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">GALP</span><span class="lg-n"><b>Galp Energia</b><span class="tsub">Ação · 60,00 un.</span></span></span><span class="c-pr">16,07 €</span><span class="c-val"><b>960 €</b></span><span class="c-pl neg">−45 € · −4,5%</span><span class="c-w"><span class="lg-wbar"><span style="width:52.1%;background:#a78bfa"></span></span>17,2%</span><span class="c-sec">Energia</span></div>
+        </section>
+        <aside class="card lg-rail">
+          <div class="ib-rail">
+            <h2 class="lg-rail-t">Dinheiro na IBKR</h2>
+            <div class="cash">
+              <div class="cash-r"><span>Euros</span><b>150,00 €</b></div>
+              <div class="cash-r"><span>Dólares</span><b>420,00 US$</b><span class="tsub">≈ 388 € ao câmbio de 26/11 (1 € = 1,083 US$)</span></div>
+            </div>
+            <div class="ib-tot"><span>Total livre em euros</span><b>538 €</b></div>
+          </div>
+          <div class="lg-rail-h"><h2 class="lg-rail-t">Setores</h2><span class="seg"><span class="on">Setor</span><span>Tipo</span></span></div>
+          <div class="lg-stack"><span style="flex-grow:33;background:#60a5fa"></span><span style="flex-grow:28.5;background:#2dd4bf"></span><span style="flex-grow:21.2;background:#22d3ee"></span><span style="flex-grow:17.2;background:#fb923c"></span></div>
+          <div class="lg-groups">
+            <div class="lg-grp"><span class="lg-sq" style="background:#60a5fa"></span><span class="lg-gn">Tecnologia</span><span class="lg-gv">1 840 €</span><b>33,0%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2dd4bf"></span><span class="lg-gn">ETF diversificado</span><span class="lg-gv">1 590 €</span><b>28,5%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#22d3ee"></span><span class="lg-gn">Utilities</span><span class="lg-gv">1 180 €</span><b>21,2%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#fb923c"></span><span class="lg-gn">Energia</span><span class="lg-gv">960 €</span><b>17,2%</b></div>
+          </div>
+          <div class="lg-note"><span class="lg-note-t">Concentração.</span> Tecnologia pesa 33,0% desta conta, tudo em ASML.</div>
+        </aside>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- =============================== B · TODAS =============================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="k">B · JUNTOS COM ORIGEM</span><h2>Todas (1440)</h2></div>
+    <p>Sem separadores. A faixa de pesos dá lugar a uma barra dividida por corretora, com o valor, o dinheiro e a frescura de cada uma; carregar numa filtra a tabela. Cada linha diz de onde vem na coluna "Origem".</p>
+    <div class="stage"><div class="frame">
+      <header class="top">
+        <span class="brand"><svg viewBox="0 0 256 256"><path class="bm-m" d="M54 40 H202 A14 14 0 0 1 216 54 V202 A14 14 0 0 1 202 216 H178 A14 14 0 0 1 164 202 V100 L139 132 Q128 146 117 132 L92 100 V202 A14 14 0 0 1 78 216 H54 A14 14 0 0 1 40 202 V54 A14 14 0 0 1 54 40 Z"/><circle class="bm-coin" cx="128" cy="186" r="24"/></svg><span class="brand-txt">moneta</span></span>
+        <nav class="nav"><a>Visão geral</a><a class="on">Investimentos</a><a>Impostos</a><a>Poupança</a><a>Objetivos</a><a>Assistente</a><a>Recursos</a></nav>
+        <div class="tools">
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg></span>
+          <span class="cta">Adicionar</span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span>
+        </div>
+      </header>
+      <div class="page-head">
+        <div><div class="eyebrow">2 corretoras · 7 posições</div><h1 class="page-title">Investimentos</h1></div>
+        <div class="inv-totals">
+          <div class="it-main"><span>Valor total</span><b>15 518 €</b></div>
+          <div><span>Lucro em aberto</span><b class="pos">+960 € · 7,2%</b></div>
+          <div><span>Investido</span><b>13 380 €</b></div>
+          <div><span>Dinheiro livre</span><b>1 178 €</b></div>
+        </div>
+      </div>
+      <div class="bk">
+        <div class="bk-bar"><span style="flex-grow:9410;background:rgba(238,244,240,.82)"></span><span style="flex-grow:6108;background:rgba(238,244,240,.32)"></span></div>
+        <div class="bk-legs">
+          <div class="bk-leg" style="flex-grow:9410">
+            <div class="bk-top"><span class="ib-tag">T212</span><span class="nm">Trading 212</span><span class="sh">60,6%</span></div>
+            <div class="bk-val">9 410 €</div>
+            <div class="bk-meta"><span class="pos">+890 € · 11,3%</span><span>640 € livres</span><span class="ib-ok">Atualizado há 5 min</span></div>
+          </div>
+          <div class="bk-leg" style="flex-grow:6108">
+            <div class="bk-top"><span class="ib-tag">IBKR</span><span class="nm">Interactive Brokers</span><span class="sh">39,4%</span></div>
+            <div class="bk-val">6 108 €</div>
+            <div class="bk-meta"><span class="pos">+70 € · 1,3%</span><span>420 US$ ≈ 388 € e 150 € livres</span><span class="ib-ok">Extrato de ontem</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="flt"><p>Carrega numa corretora para ver só as posições dela.</p><p>Posições da IBKR avaliadas ao fecho de 26/11.</p></div>
+      <div class="lg-body">
+        <section class="card lg-table">
+          <div class="lg-row lg-h"><span class="c-pos">Posição</span><span class="c-org">Origem</span><span class="c-pr">Preço atual</span><span class="c-val">Valor (€)</span><span class="c-pl">Lucro / prejuízo (€)</span><span class="c-w">Peso</span><span class="c-sec">Setor</span></div>
+          <div class="lg-row open"><span class="c-pos"><span class="tk">VWCE</span><span class="lg-n"><b>Vanguard FTSE All-World</b><span class="tsub">ETF · 28,00 un.</span></span></span><span class="c-org"><span class="ib-tag">T212</span><span class="ib-tag">IBKR</span></span><span class="c-pr">132,50 €</span><span class="c-val"><b>3 710 €</b></span><span class="c-pl pos">+395 € · +11,9%</span><span class="c-w"><span class="lg-wbar"><span style="width:100%;background:#2ecc8a"></span></span>25,9%</span><span class="c-sec">ETF diversificado</span></div>
+          <div class="lg-detail">
+            <div class="lg-split"><span class="tsub">Onde está</span>
+              <div class="lg-sp"><span class="ib-tag">T212</span><span>16,00 un. · custo médio 116,90 € <span class="tsub">· há 5 min</span></span><span>2 120 €</span><span class="pos">+250 €</span></div>
+              <div class="lg-sp"><span class="ib-tag">IBKR</span><span>12,00 un. · custo médio 120,40 € <span class="tsub">· fecho de 26/11</span></span><span>1 590 €</span><span class="pos">+145 €</span></div>
+            </div>
+            <div><span class="tsub">Custo médio (junto)</span><b>118,39 €</b><span class="tsub pos">preço +11,9% acima</span></div>
+            <div><span class="tsub">Dividendos</span><b>Acumula</b><span class="tsub">Não paga, reinveste</span></div>
+            <div class="lg-tax"><span class="tsub">Impostos</span><span>Se vendesses hoje, pagavas cerca de 111 € (28% de 395 €) no anexo J. Cada corretora declara o seu lote, com o seu custo.</span></div>
+          </div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">AAPL</span><span class="lg-n"><b>Apple</b><span class="tsub">Ação · 14,00 un.</span></span></span><span class="c-org"><span class="ib-tag">T212</span></span><span class="c-pr">229,10 US$</span><span class="c-val"><b>2 970 €</b></span><span class="c-pl pos">+540 € · +22,2%</span><span class="c-w"><span class="lg-wbar"><span style="width:79.9%;background:#60a5fa"></span></span>20,7%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">MSFT</span><span class="lg-n"><b>Microsoft</b><span class="tsub">Ação · 5,85 un.</span></span></span><span class="c-org"><span class="ib-tag">T212</span></span><span class="c-pr">451,30 US$</span><span class="c-val"><b>2 440 €</b></span><span class="c-pl pos">+410 € · +20,2%</span><span class="c-w"><span class="lg-wbar"><span style="width:65.6%;background:#f5b84b"></span></span>17,0%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">ASML</span><span class="lg-n"><b>ASML</b><span class="tsub">Ação · 2,80 un.</span></span></span><span class="c-org"><span class="ib-tag">IBKR</span></span><span class="c-pr">658,10 €</span><span class="c-val"><b>1 840 €</b></span><span class="c-pl neg">−90 € · −4,7%</span><span class="c-w"><span class="lg-wbar"><span style="width:49.4%;background:#a78bfa"></span></span>12,8%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">NOVO</span><span class="lg-n"><b>Novo Nordisk</b><span class="tsub">Ação · 13,40 un.</span></span></span><span class="c-org"><span class="ib-tag">T212</span></span><span class="c-pr">92,40 €</span><span class="c-val"><b>1 240 €</b></span><span class="c-pl neg">−310 € · −20,0%</span><span class="c-w"><span class="lg-wbar"><span style="width:33.2%;background:#fb7185"></span></span>8,6%</span><span class="c-sec">Saúde</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">EDP</span><span class="lg-n"><b>EDP</b><span class="tsub">Ação · 318,00 un.</span></span></span><span class="c-org"><span class="ib-tag">IBKR</span></span><span class="c-pr">3,72 €</span><span class="c-val"><b>1 180 €</b></span><span class="c-pl pos">+60 € · +5,4%</span><span class="c-w"><span class="lg-wbar"><span style="width:31.7%;background:#2dd4bf"></span></span>8,2%</span><span class="c-sec">Utilities</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">GALP</span><span class="lg-n"><b>Galp Energia</b><span class="tsub">Ação · 60,00 un.</span></span></span><span class="c-org"><span class="ib-tag">IBKR</span></span><span class="c-pr">16,07 €</span><span class="c-val"><b>960 €</b></span><span class="c-pl neg">−45 € · −4,5%</span><span class="c-w"><span class="lg-wbar"><span style="width:25.9%;background:#fb923c"></span></span>6,7%</span><span class="c-sec">Energia</span></div>
+        </section>
+        <aside class="card lg-rail">
+          <div class="lg-rail-h"><h2 class="lg-rail-t">Setores</h2><span class="seg"><span class="on">Setor</span><span>Tipo</span></span></div>
+          <div class="lg-stack"><span style="flex-grow:50.6;background:#60a5fa"></span><span style="flex-grow:25.9;background:#2dd4bf"></span><span style="flex-grow:8.6;background:#2ecc8a"></span><span style="flex-grow:8.2;background:#22d3ee"></span><span style="flex-grow:6.7;background:#fb923c"></span></div>
+          <div class="lg-groups">
+            <div class="lg-grp"><span class="lg-sq" style="background:#60a5fa"></span><span class="lg-gn">Tecnologia</span><span class="lg-gv">7 250 €</span><b>50,6%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2dd4bf"></span><span class="lg-gn">ETF diversificado</span><span class="lg-gv">3 710 €</span><b>25,9%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2ecc8a"></span><span class="lg-gn">Saúde</span><span class="lg-gv">1 240 €</span><b>8,6%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#22d3ee"></span><span class="lg-gn">Utilities</span><span class="lg-gv">1 180 €</span><b>8,2%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#fb923c"></span><span class="lg-gn">Energia</span><span class="lg-gv">960 €</span><b>6,7%</b></div>
+          </div>
+          <div class="lg-note"><span class="lg-note-t warn">Concentração.</span> Tecnologia pesa 50,6% da carteira junta; o VWCE sozinho vale 25,9%.</div>
+        </aside>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- =============================== B · SÓ T212 =============================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="k">B · JUNTOS COM ORIGEM</span><h2>Filtrado: só Trading 212 (1440)</h2></div>
+    <p>Carregaste na Trading 212: a barra realça-a, a outra fica apagada, e um filtro claro diz o que estás a ver e deixa limpar. Novo Nordisk aberta, com prejuízo. A coluna "Origem" sai, porque seria igual em todas as linhas.</p>
+    <div class="stage"><div class="frame flt-on">
+      <header class="top">
+        <span class="brand"><svg viewBox="0 0 256 256"><path class="bm-m" d="M54 40 H202 A14 14 0 0 1 216 54 V202 A14 14 0 0 1 202 216 H178 A14 14 0 0 1 164 202 V100 L139 132 Q128 146 117 132 L92 100 V202 A14 14 0 0 1 78 216 H54 A14 14 0 0 1 40 202 V54 A14 14 0 0 1 54 40 Z"/><circle class="bm-coin" cx="128" cy="186" r="24"/></svg><span class="brand-txt">moneta</span></span>
+        <nav class="nav"><a>Visão geral</a><a class="on">Investimentos</a><a>Impostos</a><a>Poupança</a><a>Objetivos</a><a>Assistente</a><a>Recursos</a></nav>
+        <div class="tools">
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg></span>
+          <span class="cta">Adicionar</span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span>
+        </div>
+      </header>
+      <div class="page-head">
+        <div><div class="eyebrow">Trading 212 · 4 posições</div><h1 class="page-title">Investimentos</h1></div>
+        <div class="inv-totals">
+          <div class="it-main"><span>Valor da conta</span><b>9 410 €</b></div>
+          <div><span>Lucro em aberto</span><b class="pos">+890 € · 11,3%</b></div>
+          <div><span>Investido</span><b>7 880 €</b></div>
+          <div><span>Dinheiro livre</span><b>640 €</b></div>
+        </div>
+      </div>
+      <div class="bk">
+        <div class="bk-bar"><span style="flex-grow:9410;background:#eef4f0"></span><span style="flex-grow:6108;background:rgba(238,244,240,.1)"></span></div>
+        <div class="bk-legs">
+          <div class="bk-leg on" style="flex-grow:9410">
+            <div class="bk-top"><span class="ib-tag">T212</span><span class="nm">Trading 212</span><span class="sh">60,6%</span></div>
+            <div class="bk-val">9 410 €</div>
+            <div class="bk-meta"><span class="pos">+890 € · 11,3%</span><span>640 € livres</span><span class="ib-ok">Atualizado há 5 min</span></div>
+          </div>
+          <div class="bk-leg off" style="flex-grow:6108">
+            <div class="bk-top"><span class="ib-tag">IBKR</span><span class="nm">Interactive Brokers</span><span class="sh">39,4%</span></div>
+            <div class="bk-val">6 108 €</div>
+            <div class="bk-meta"><span class="pos">+70 € · 1,3%</span><span>420 US$ ≈ 388 € e 150 € livres</span><span class="ib-ok">Extrato de ontem</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="flt"><span class="chip">Só Trading 212 <i>Limpar ✕</i></span><p>Os números de cima são só desta corretora. Pesos medidos sobre 8 770 € investidos.</p></div>
+      <div class="lg-body">
+        <section class="card lg-table">
+          <div class="lg-row lg-h"><span class="c-pos">Posição</span><span class="c-org">Origem</span><span class="c-pr">Preço atual</span><span class="c-val">Valor (€)</span><span class="c-pl">Lucro / prejuízo (€)</span><span class="c-w">Peso</span><span class="c-sec">Setor</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">AAPL</span><span class="lg-n"><b>Apple</b><span class="tsub">Ação · 14,00 un.</span></span></span><span class="c-org"><span class="ib-tag">T212</span></span><span class="c-pr">229,10 US$</span><span class="c-val"><b>2 970 €</b></span><span class="c-pl pos">+540 € · +22,2%</span><span class="c-w"><span class="lg-wbar"><span style="width:100%;background:#2ecc8a"></span></span>33,9%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">MSFT</span><span class="lg-n"><b>Microsoft</b><span class="tsub">Ação · 5,85 un.</span></span></span><span class="c-org"><span class="ib-tag">T212</span></span><span class="c-pr">451,30 US$</span><span class="c-val"><b>2 440 €</b></span><span class="c-pl pos">+410 € · +20,2%</span><span class="c-w"><span class="lg-wbar"><span style="width:82%;background:#60a5fa"></span></span>27,8%</span><span class="c-sec">Tecnologia</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">VWCE</span><span class="lg-n"><b>Vanguard FTSE All-World</b><span class="tsub">ETF · 16,00 un. · mais 12,00 na IBKR</span></span></span><span class="c-org"><span class="ib-tag">T212</span></span><span class="c-pr">132,50 €</span><span class="c-val"><b>2 120 €</b></span><span class="c-pl pos">+250 € · +13,4%</span><span class="c-w"><span class="lg-wbar"><span style="width:71.4%;background:#f5b84b"></span></span>24,2%</span><span class="c-sec">ETF diversificado</span></div>
+          <div class="lg-row open"><span class="c-pos"><span class="tk">NOVO</span><span class="lg-n"><b>Novo Nordisk</b><span class="tsub">Ação · 13,40 un.</span></span></span><span class="c-org"><span class="ib-tag">T212</span></span><span class="c-pr">92,40 €</span><span class="c-val"><b>1 240 €</b></span><span class="c-pl neg">−310 € · −20,0%</span><span class="c-w"><span class="lg-wbar"><span style="width:41.6%;background:#a78bfa"></span></span>14,1%</span><span class="c-sec">Saúde</span></div>
+          <div class="lg-detail" style="border-bottom:0">
+            <div><span class="tsub">Custo médio</span><b>115,67 €</b><span class="tsub neg">preço −20,1% abaixo</span></div>
+            <div><span class="tsub">Dividendos</span><b>Semestral · mar e ago</b><span class="tsub">Retenção na Dinamarca: 27%</span></div>
+            <div class="lg-tax"><span class="tsub">Impostos</span><span>Se vendesses hoje, os −310 € entravam no anexo J e compensavam mais-valias do mesmo ano.</span></div>
+          </div>
+        </section>
+        <aside class="card lg-rail">
+          <div class="lg-rail-h"><h2 class="lg-rail-t">Setores</h2><span class="seg"><span class="on">Setor</span><span>Tipo</span></span></div>
+          <div class="lg-stack"><span style="flex-grow:61.7;background:#60a5fa"></span><span style="flex-grow:24.2;background:#2dd4bf"></span><span style="flex-grow:14.1;background:#2ecc8a"></span></div>
+          <div class="lg-groups">
+            <div class="lg-grp"><span class="lg-sq" style="background:#60a5fa"></span><span class="lg-gn">Tecnologia</span><span class="lg-gv">5 410 €</span><b>61,7%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2dd4bf"></span><span class="lg-gn">ETF diversificado</span><span class="lg-gv">2 120 €</span><b>24,2%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2ecc8a"></span><span class="lg-gn">Saúde</span><span class="lg-gv">1 240 €</span><b>14,1%</b></div>
+          </div>
+          <div class="lg-note"><span class="lg-note-t warn">Concentração.</span> Tecnologia pesa 61,7% desta conta; a Apple sozinha vale 33,9%.</div>
+        </aside>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- =============================== A · TELEMÓVEL =============================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="k">A · SEPARADOR POR CORRETORA</span><h2>Telemóvel, Todas (375)</h2></div>
+    <p>Os três separadores cabem lado a lado, com alvos de 44 px. Na tabela ficam o valor e a percentagem; a divisão do VWCE quebra em duas linhas. A coluna da direita desce para baixo da tabela.</p>
+    <div class="stage m"><div class="frame m">
+      <header class="top">
+        <span class="brand"><svg viewBox="0 0 256 256"><path class="bm-m" d="M54 40 H202 A14 14 0 0 1 216 54 V202 A14 14 0 0 1 202 216 H178 A14 14 0 0 1 164 202 V100 L139 132 Q128 146 117 132 L92 100 V202 A14 14 0 0 1 78 216 H54 A14 14 0 0 1 40 202 V54 A14 14 0 0 1 54 40 Z"/><circle class="bm-coin" cx="128" cy="186" r="24"/></svg></span>
+        <div class="tools">
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg></span>
+          <span class="cta">Adicionar</span>
+          <span class="round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span>
+        </div>
+      </header>
+      <div class="page-head">
+        <div><div class="eyebrow">2 corretoras · 7 posições</div><h1 class="page-title">Investimentos</h1></div>
+        <div class="inv-totals">
+          <div class="it-main"><span>Valor total</span><b>15 518 €</b></div>
+          <div><span>Lucro em aberto</span><b class="pos">+960 € · 7,2%</b></div>
+          <div><span>Investido</span><b>13 380 €</b></div>
+          <div><span>Livre</span><b>1 178 €</b></div>
+        </div>
+      </div>
+      <div class="ib-bar">
+        <div class="ib-tabs">
+          <div class="ib-tab on"><span class="ib-n">Todas</span><b>15 518 €</b><span class="ib-s none">7 posições</span></div>
+          <div class="ib-tab"><span class="ib-n">Trading 212</span><b>9 410 €</b><span class="ib-s">há 5 min</span></div>
+          <div class="ib-tab"><span class="ib-n">IBKR</span><b>6 108 €</b><span class="ib-s">ontem</span></div>
+        </div>
+        <p class="ib-hint">A IBKR envia um extrato por dia: valores do fecho de 26/11.</p>
+      </div>
+      <div class="lg-strip">
+        <div class="lg-bar"><span style="flex-grow:25.9;background:#2ecc8a"></span><span style="flex-grow:20.7;background:#60a5fa"></span><span style="flex-grow:17;background:#f5b84b"></span><span style="flex-grow:12.8;background:#a78bfa"></span><span style="flex-grow:8.6;background:#fb7185"></span><span style="flex-grow:8.2;background:#2dd4bf"></span><span style="flex-grow:6.7;background:#fb923c"></span></div>
+        <div class="lg-cap"><span>Peso de cada posição (14 340 € investidos)</span><span>Maior posição: <b>VWCE 25,9%</b></span></div>
+      </div>
+      <div class="lg-body">
+        <section class="card lg-table">
+          <div class="lg-row lg-h"><span class="c-pos">Posição</span><span class="c-val">Valor</span><span class="c-pl">Lucro</span></div>
+          <div class="lg-row open"><span class="c-pos"><span class="tk">VWCE</span><span class="lg-n"><b>Vanguard FTSE All-World</b><span class="tsub">ETF · 28,00 un. · T212 e IBKR</span></span></span><span class="c-val"><b>3 710 €</b></span><span class="c-pl pos">+11,9%</span></div>
+          <div class="lg-detail">
+            <div class="lg-split"><span class="tsub">Onde está</span>
+              <div class="lg-sp"><span class="ib-tag">T212</span><span>16,00 un. · 2 120 €</span><span class="pos">+250 €</span><span class="tsub">custo médio 116,90 € · há 5 min</span></div>
+              <div class="lg-sp"><span class="ib-tag">IBKR</span><span>12,00 un. · 1 590 €</span><span class="pos">+145 €</span><span class="tsub">custo médio 120,40 € · fecho de 26/11</span></div>
+            </div>
+            <div><span class="tsub">Custo médio</span><b>118,39 €</b><span class="tsub pos">+11,9% acima</span></div>
+            <div><span class="tsub">Dividendos</span><b>Acumula</b></div>
+            <div class="lg-tax"><span class="tsub">Impostos</span><span>Se vendesses hoje, pagavas cerca de 111 € (28% de 395 €) no anexo J.</span></div>
+          </div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">AAPL</span><span class="lg-n"><b>Apple</b><span class="tsub">Ação · T212</span></span></span><span class="c-val"><b>2 970 €</b></span><span class="c-pl pos">+22,2%</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">MSFT</span><span class="lg-n"><b>Microsoft</b><span class="tsub">Ação · T212</span></span></span><span class="c-val"><b>2 440 €</b></span><span class="c-pl pos">+20,2%</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">ASML</span><span class="lg-n"><b>ASML</b><span class="tsub">Ação · IBKR</span></span></span><span class="c-val"><b>1 840 €</b></span><span class="c-pl neg">−4,7%</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">NOVO</span><span class="lg-n"><b>Novo Nordisk</b><span class="tsub">Ação · T212</span></span></span><span class="c-val"><b>1 240 €</b></span><span class="c-pl neg">−20,0%</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">EDP</span><span class="lg-n"><b>EDP</b><span class="tsub">Ação · IBKR</span></span></span><span class="c-val"><b>1 180 €</b></span><span class="c-pl pos">+5,4%</span></div>
+          <div class="lg-row"><span class="c-pos"><span class="tk">GALP</span><span class="lg-n"><b>Galp Energia</b><span class="tsub">Ação · IBKR</span></span></span><span class="c-val"><b>960 €</b></span><span class="c-pl neg">−4,5%</span></div>
+        </section>
+        <aside class="card lg-rail">
+          <div class="ib-rail" style="border-bottom:0;padding-bottom:0">
+            <h2 class="lg-rail-t">Corretoras</h2>
+            <div class="ib-row"><span class="ib-tag">T212</span><span class="ib-rn"><b>Trading 212</b><span class="tsub ib-ok">Atualizado há 5 min</span></span><span class="ib-rv"><b>9 410 €</b><span class="tsub">640 € livres</span></span></div>
+            <div class="ib-row"><span class="ib-tag">IBKR</span><span class="ib-rn"><b>Interactive Brokers</b><span class="tsub ib-ok">Extrato de ontem</span></span><span class="ib-rv"><b>6 108 €</b><span class="tsub">538 € livres</span></span></div>
+            <div class="ib-fx"><span class="tsub">Dinheiro na IBKR: 150,00 € e 420,00 US$ (≈ 388 € ao câmbio de 26/11)</span></div>
+            <div class="ib-tot"><span>Dinheiro livre nas duas</span><b>1 178 €</b></div>
+          </div>
+        </aside>
+        <aside class="card lg-rail">
+          <div class="lg-rail-h"><h2 class="lg-rail-t">Setores</h2><span class="seg"><span class="on">Setor</span><span>Tipo</span></span></div>
+          <div class="lg-stack"><span style="flex-grow:50.6;background:#60a5fa"></span><span style="flex-grow:25.9;background:#2dd4bf"></span><span style="flex-grow:8.6;background:#2ecc8a"></span><span style="flex-grow:8.2;background:#22d3ee"></span><span style="flex-grow:6.7;background:#fb923c"></span></div>
+          <div class="lg-groups">
+            <div class="lg-grp"><span class="lg-sq" style="background:#60a5fa"></span><span class="lg-gn">Tecnologia</span><span class="lg-gv">7 250 €</span><b>50,6%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2dd4bf"></span><span class="lg-gn">ETF diversificado</span><span class="lg-gv">3 710 €</span><b>25,9%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#2ecc8a"></span><span class="lg-gn">Saúde</span><span class="lg-gv">1 240 €</span><b>8,6%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#22d3ee"></span><span class="lg-gn">Utilities</span><span class="lg-gv">1 180 €</span><b>8,2%</b></div>
+            <div class="lg-grp"><span class="lg-sq" style="background:#fb923c"></span><span class="lg-gn">Energia</span><span class="lg-gv">960 €</span><b>6,7%</b></div>
+          </div>
+        </aside>
+      </div>
+      <nav class="bbar">
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM14 4v4h6V4zM4 20h6v-3H4z"/></svg>Visão</a>
+        <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Investir</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v18l-2.5-1.6L12 21l-2.5-1.6L7 21z"/><path d="M10 8h4M10 12h4"/></svg>Impostos</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></svg>Metas</a>
+        <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Assistente</a>
+      </nav>
+    </div></div>
+  </section>
+</main>
+<script>
+// Encolhe as molduras de 1440 px para caberem na largura da página, sem scroll horizontal
+function fit() {
+  document.querySelectorAll('.stage').forEach((st) => {
+    const f = st.firstElementChild, w = f.offsetWidth, s = Math.min(1, st.clientWidth / w);
+    f.style.transform = s < 1 ? `scale(${s})` : '';
+    st.style.height = (f.offsetHeight * s) + 'px';
+  });
+}
+addEventListener('resize', fit); addEventListener('load', fit); fit();
+</script>
+</body>
+</html>

@@ -19,10 +19,21 @@ const SIZES = [{ name: 'desktop', width: 1440, height: 900 }, { name: 'telemovel
 const FAKE_POSITIONS = [
   { ticker: 'AAA_US_EQ', short: 'AAA', name: 'Alpha Tech Inc.', type: 'STOCK', sector: 'Tecnologia', quantity: 10.5, averagePrice: 100, currentPrice: 120, priceCcy: 'USD', value: 1160, ppl: 190, pplPct: 19.6, dividend: { status: 'paga', freq: 'trimestral', months: 'mar · jun · set · dez' } },
   { ticker: 'BBB_EQ', short: 'BBB', name: 'Beta Saúde SA', type: 'STOCK', sector: 'Saúde', quantity: 20, averagePrice: 40, currentPrice: 35, priceCcy: 'EUR', value: 700, ppl: -100, pplPct: -12.5, dividend: { status: 'nao' } },
-  { ticker: 'CCCa_EQ', short: 'CCC', name: 'iShares Core MSCI World UCITS ETF (Acc)', type: 'ETF', sector: 'Diversificado (ETF)', quantity: 5.25, averagePrice: 90, currentPrice: 100, priceCcy: 'EUR', value: 525, ppl: 52.5, pplPct: 11.1, dividend: { status: 'acumula' } },
+  { ticker: 'CCCa_EQ', short: 'CCC', isin: 'XX0000000CCC', broker: 't212', name: 'iShares Core MSCI World UCITS ETF (Acc)', type: 'ETF', sector: 'Diversificado (ETF)', quantity: 5.25, averagePrice: 90, currentPrice: 100, priceCcy: 'EUR', value: 525, ppl: 52.5, pplPct: 11.1, dividend: { status: 'acumula' } },
   { ticker: 'DDD_EQ', short: 'DDD', name: 'Delta Ouro ETC', type: 'ETF', sector: 'Ouro e matérias-primas', quantity: 1, averagePrice: 300, currentPrice: 290, priceCcy: 'EUR', value: 290, ppl: -10, pplPct: -3.3, dividend: { status: 'desconhecido' } },
 ];
 const FAKE_BROKER = { currency: 'EUR', total: 3181.7, free: 506.7, invested: 2542.5, ppl: 132.5, result: -20, totalEUR: 3181.7, freeEUR: 506.7, positions: FAKE_POSITIONS, fetchedAt: new Date().toISOString() };
+// IBKR fictícia (extrato de ontem): CCC também está na Trading 212 (mesmo ISIN), EEE só aqui, e dinheiro em euros e dólares
+const localYmd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const FAKE_IBKR_POSITIONS = [
+  { ticker: 'ibkr:1001', broker: 'ibkr', short: 'CCC', isin: 'XX0000000CCC', name: 'ISHARES CORE MSCI WORLD', type: 'ETF', sector: 'Diversificado (ETF)', quantity: 3, averagePrice: 90, currentPrice: 100, priceCcy: 'EUR', value: 300, ppl: 30, pplPct: 11.1, dividend: { status: 'acumula' } },
+  { ticker: 'ibkr:1002', broker: 'ibkr', short: 'EEE', isin: 'XX0000000EEE', name: 'Epsilon Energia', type: 'STOCK', sector: 'Energia', quantity: 40, averagePrice: 10.5, currentPrice: 10, priceCcy: 'EUR', value: 400, ppl: -20, pplPct: -4.8, dividend: { status: 'paga', freq: 'anual', months: 'mai' } },
+];
+const FAKE_IBKR = { broker: 'ibkr', currency: 'EUR', total: 1238, totalEUR: 1238, free: 538, freeEUR: 538, invested: 690, ppl: 10,
+  cash: [{ ccy: 'EUR', amount: 150, eur: 150 }, { ccy: 'USD', amount: 420, eur: 388 }], positions: FAKE_IBKR_POSITIONS,
+  statementDate: localYmd(new Date(Date.now() - 864e5)), fxDate: localYmd(new Date(Date.now() - 864e5)), fetchedAt: new Date().toISOString() };
+const FAKE_IBKR_KEY = { id: 'fake-ibkr', platform: 'ibkr', label: 'IBKR (teste)', env: 'live', hint: '••••0000', hasSecret: true, active: true, createdAt: new Date().toISOString() };
+const ALL_ROWS = FAKE_POSITIONS.length + 1; // CCC junta-se numa linha; EEE é a linha a mais
 
 function dataFile() {
   const dir = process.env.MONETA_DATA ? path.resolve(process.env.MONETA_DATA)
@@ -83,11 +94,13 @@ export async function validar({ screenshots = true } = {}) {
       await page.route('**/api/state', async (route) => {
         const r = await route.fetch(); const j = await r.json();
         j.settings = { ...j.settings, t212: { ...(j.settings?.t212 || {}), configured: true, env: 'live' } };
+        j.keys = [...(j.keys || []), FAKE_IBKR_KEY];
         await route.fulfill({ response: r, json: j });
       });
       await page.route('**/api/summary', async (route) => {
         const r = await route.fetch(); const j = await r.json();
         j.broker = FAKE_BROKER;
+        j.ibkr = FAKE_IBKR;
         await route.fulfill({ response: r, json: j });
       });
       await page.goto(srv.url + '/#visao', { waitUntil: 'networkidle' });
@@ -104,12 +117,53 @@ export async function validar({ screenshots = true } = {}) {
         ok(info.text > 20, `${where}: a página tem conteúdo`);
         ok(info.overflow <= 1, `${where}: sem scroll para o lado (${info.overflow}px a mais)`);
         if (v === 'investimentos') {
+          const tabs = page.locator('.ib-tab');
+          ok(await tabs.count() === 3, `${where}: três separadores (Todas, Trading 212, IBKR) (encontrou ${await tabs.count()})`);
           const rows = await page.locator('button.lg-row').count();
-          ok(rows === FAKE_POSITIONS.length, `${where}: tabela com ${FAKE_POSITIONS.length} posições (encontrou ${rows})`);
+          ok(rows === ALL_ROWS, `${where}: "Todas" junta as duas corretoras em ${ALL_ROWS} linhas (encontrou ${rows})`);
           if (rows) {
             await page.locator('button.lg-row').first().click();
             ok(await page.locator('.lg-detail').count() === 1, `${where}: clicar numa linha abre o detalhe`);
           }
+          // Cores fixas: cada posição guarda a cor de "Todas" nos separadores de cada corretora
+          const colors = () => page.$$eval('button.lg-row', (bs) => Object.fromEntries(bs.map((b) => [b.dataset.open, b.dataset.color])));
+          const allColors = await colors();
+          // A linha partilhada (CCC) abre com a divisão por corretora
+          const sharedRow = page.locator('button.lg-row[data-open="p:XX0000000CCC"]');
+          ok(await sharedRow.count() === 1 && /T212 e IBKR/.test(await sharedRow.innerText()), `${where}: CCC aparece numa só linha, "T212 e IBKR"`);
+          if (await sharedRow.count()) {
+            await sharedRow.click();
+            const det = await page.locator('.lg-detail').textContent();
+            ok(await page.locator('.lg-detail .lg-split .lg-sp').count() === 2 && /Onde está/.test(det), `${where}: a linha partilhada abre com "Onde está" e uma linha por corretora`);
+            ok(/Cada corretora declara o seu lote/.test(det) && /fecho de/.test(det), `${where}: o detalhe diz o fecho da IBKR e a nota de impostos por corretora`);
+          }
+          ok(/Dinheiro livre nas duas/.test(await page.locator('.lg-rail').textContent()), `${where}: coluna "Corretoras" com "Dinheiro livre nas duas"`);
+          // Separador IBKR: só as linhas da IBKR, com as mesmas cores
+          await page.locator('.ib-tab[data-broker="ibkr"]').click();
+          const ibRows = await page.locator('button.lg-row').count();
+          ok(ibRows === FAKE_IBKR_POSITIONS.length, `${where}: o separador IBKR mostra só as ${FAKE_IBKR_POSITIONS.length} posições da IBKR (encontrou ${ibRows})`);
+          const ibColors = await colors();
+          ok(Object.keys(ibColors).length > 0 && Object.entries(ibColors).every(([k, c]) => allColors[k] === c), `${where}: cada ticker tem a mesma cor em "Todas" e no separador IBKR`);
+          ok(/mais 5,25 na T212/.test(await page.locator('button.lg-row[data-open="p:XX0000000CCC"]').innerText()), `${where}: na IBKR, CCC diz "mais 5,25 na T212"`);
+          const ibText = await page.locator('#brokerBody').textContent();
+          ok(/Preço \(fecho\)/.test(ibText) && /Dinheiro na IBKR/.test(ibText) && /Dólares/.test(ibText), `${where}: IBKR com "Preço (fecho)" e o dinheiro moeda a moeda`);
+          ok(await page.locator('.ib-tab[data-broker="ibkr"] .ib-s.warn, .ib-tab[data-broker="ibkr"] .ib-s.err').count() === 0, `${where}: extrato de ontem com a bolinha verde`);
+          const tones = await page.evaluate(() => {
+            const d = new Date(Date.now() - 10 * 864e5), iso = ymdLocal(d);
+            return [brokerFresh({ id: 'ibkr', ok: true, d: { statementDate: iso } }).tone, brokerFresh({ id: 'ibkr', ok: false, d: { error: 'x' } }).tone,
+              brokerFresh({ id: 'ibkr', ok: true, d: { statementDate: ymdLocal(new Date()), stale: true } }).tone];
+          });
+          ok(tones.join() === 'warn,err,warn', `${where}: IBKR fica âmbar sem extrato novo há 2+ dias úteis ou em cache, e vermelha sem dados (${tones.join()})`);
+          const ibOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+          ok(ibOverflow <= 1, `${where}: separador IBKR sem scroll para o lado (${ibOverflow}px a mais)`);
+          if (screenshots) await page.screenshot({ path: path.join(OUT, `${size.name}-investimentos-ibkr.png`), fullPage: true });
+          await page.locator('.ib-tab[data-broker="t212"]').click();
+          ok(await page.locator('button.lg-row').count() === FAKE_POSITIONS.length, `${where}: o separador Trading 212 mostra só as posições da Trading 212`);
+          // Volta a "Todas" com a linha partilhada aberta (para a captura)
+          await page.locator('.ib-tab[data-broker="all"]').click();
+          if (await sharedRow.count()) await sharedRow.click();
+          const allOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+          ok(allOverflow <= 1, `${where}: "Todas" com a divisão aberta sem scroll para o lado (${allOverflow}px a mais)`);
         }
         if (v === 'objetivos') {
           ok(await page.locator('.g-money .gm-bar').count() > 0, `${where}: faixa "Dinheiro para objetivos" aparece`);
