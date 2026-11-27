@@ -46,7 +46,7 @@ It was built for an investor in Portugal (the interface is in European Portugues
 You need **[Node.js 20 or newer](https://nodejs.org)**.
 
 ```bash
-git clone https://github.com/<you>/moneta.git
+git clone https://github.com/TiagoMoreira003/moneta.git
 cd moneta
 npm install
 npm start
