@@ -1,0 +1,7 @@
+data/
+node_modules/
+.validacao/
+.validacao-ok
+.claude/settings.local.json
+*.tmp.json
+*.bak

@@ -1,0 +1,20 @@
+{
+  "name": "moneta",
+  "version": "0.1.0",
+  "description": "Local-first personal net worth dashboard: stocks, savings, taxes and goals.",
+  "license": "AGPL-3.0-only",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "validar": "node scripts/validar.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
+}

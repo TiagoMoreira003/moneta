@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/validar-hook.mjs\"",
+            "timeout": 240,
+            "statusMessage": "A validar a interface com o Playwright…"
+          }
+        ]
+      }
+    ]
+  }
+}

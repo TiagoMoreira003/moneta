@@ -1,0 +1,22 @@
+{
+  "$comment": "Setor, dividendos, domínio do logótipo e nome curto de tickers comuns (chave = ticker curto da Trading 212). Para os teus, cria tickers.json na pasta de dados com o mesmo formato: as tuas entradas ganham.",
+  "AAPL": { "sector": "Tecnologia", "domain": "apple.com", "dividend": { "status": "paga", "freq": "trimestral", "months": "fev · mai · ago · nov" } },
+  "MSFT": { "sector": "Tecnologia", "domain": "microsoft.com", "dividend": { "status": "paga", "freq": "trimestral", "months": "mar · jun · set · dez" } },
+  "GOOGL": { "sector": "Serviços de comunicação", "domain": "abc.xyz", "dividend": { "status": "paga", "freq": "trimestral", "months": "mar · jun · set · dez" } },
+  "AMZN": { "sector": "Consumo discricionário", "domain": "amazon.com", "dividend": { "status": "nao" } },
+  "META": { "sector": "Serviços de comunicação", "domain": "meta.com", "dividend": { "status": "paga", "freq": "trimestral", "months": "mar · jun · set · dez" } },
+  "TSLA": { "sector": "Consumo discricionário", "domain": "tesla.com", "dividend": { "status": "nao" } },
+  "ASML": { "sector": "Tecnologia", "domain": "asml.com", "dividend": { "status": "paga", "freq": "trimestral", "months": "fev · mai · ago · nov" } },
+  "JNJ": { "sector": "Saúde", "domain": "jnj.com", "alias": "Johnson & Johnson", "dividend": { "status": "paga", "freq": "trimestral", "months": "mar · jun · set · dez" } },
+  "KO": { "sector": "Consumo básico", "domain": "coca-colacompany.com", "alias": "Coca-Cola", "dividend": { "status": "paga", "freq": "trimestral", "months": "abr · jul · out · dez" } },
+  "ULVR": { "sector": "Consumo básico", "domain": "unilever.com", "dividend": { "status": "paga", "freq": "trimestral", "months": "mar · jun · set · dez" } },
+  "ALV": { "sector": "Financeiro", "domain": "allianz.com", "dividend": { "status": "paga", "freq": "anual", "months": "mai" } },
+  "IBE": { "sector": "Utilities", "domain": "iberdrola.com", "dividend": { "status": "paga", "freq": "semestral", "months": "jan · jul" } },
+  "TTE": { "sector": "Energia", "domain": "totalenergies.com", "dividend": { "status": "paga", "freq": "trimestral", "months": "jan · abr · jul · out" } },
+  "GALP": { "sector": "Energia", "domain": "galp.com", "alias": "Galp", "dividend": { "status": "paga", "freq": "semestral", "months": "mai · set" } },
+  "JMT": { "sector": "Consumo básico", "domain": "jeronimomartins.com", "alias": "Jerónimo Martins", "dividend": { "status": "paga", "freq": "anual", "months": "mai" } },
+  "VWCE": { "sector": "Diversificado (ETF)", "domain": "vanguard.com", "alias": "Vanguard FTSE All-World", "dividend": { "status": "acumula" } },
+  "VUAA": { "sector": "Diversificado (ETF)", "domain": "vanguard.com", "alias": "Vanguard S&P 500", "dividend": { "status": "acumula" } },
+  "IWDA": { "sector": "Diversificado (ETF)", "domain": "ishares.com", "alias": "iShares MSCI World", "dividend": { "status": "acumula" } },
+  "SGLN": { "sector": "Ouro e matérias-primas", "domain": "ishares.com", "alias": "iShares Gold", "dividend": { "status": "nao", "note": "ouro físico" } }
+}
