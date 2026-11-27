@@ -69,6 +69,8 @@ function cashAvailable() {
   const out = {};
   const br = brokerCache?.value;
   if (br) out.t212 = Math.max(0, br.freeEUR ?? br.free ?? 0);
+  const ib = ibkrCache?.value;
+  if (ib && ib.freeEUR != null) out.ibkr = Math.max(0, ib.freeEUR);
   for (const a of enriched()) if (a.type === 'conta') out['a:' + a.id] = Math.max(0, a.value || 0);
   return out;
 }
@@ -77,7 +79,7 @@ function cashAvailable() {
 // changes: { goalId: alloc novo } ("__novo" para um objetivo ainda por criar)
 function allocError(changes) {
   const avail = cashAvailable(), before = {}, after = {};
-  const names = { t212: 'Trading 212' };
+  const names = { t212: 'Trading 212', ibkr: 'IBKR' };
   for (const a of enriched()) names['a:' + a.id] = a.name;
   for (const g of data.goals) for (const [k, v] of Object.entries(g.alloc || {})) before[k] = (before[k] || 0) + v;
   const goals = [...data.goals.map((g) => ({ id: g.id, alloc: changes[g.id] ?? g.alloc ?? {} })), ...(changes.__novo ? [{ alloc: changes.__novo }] : [])];
@@ -96,6 +98,7 @@ function allocError(changes) {
 const fmtC = (n) => (Math.round(n * 100) / 100).toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 function srcName(k) {
   if (k === 't212') return 'Trading 212';
+  if (k === 'ibkr') return 'IBKR';
   const a = data.assets.find((x) => 'a:' + x.id === k);
   return a ? a.name : 'conta apagada';
 }
@@ -159,7 +162,7 @@ function cleanAlloc(a) {
   const out = {};
   if (a && typeof a === 'object') for (const [k, v] of Object.entries(a)) {
     const n = Number(v);
-    if (/^(t212|a:[\w-]{1,64})$/.test(k) && Number.isFinite(n) && n > 0) out[k] = Math.round(n * 100) / 100;
+    if (/^(t212|ibkr|a:[\w-]{1,64})$/.test(k) && Number.isFinite(n) && n > 0) out[k] = Math.round(n * 100) / 100;
   }
   return out;
 }
@@ -280,7 +283,7 @@ async function getRates() {
     const r = await fetch('https://api.frankfurter.app/latest?base=EUR');
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const j = await r.json();
-    fx = { rates: { ...j.rates, EUR: 1 }, at: Date.now(), ok: true };
+    fx = { rates: { ...j.rates, EUR: 1 }, at: Date.now(), ok: true, date: j.date || null };
   } catch (e) {
     console.warn('[câmbios] falhou:', e.message);
   }
@@ -322,7 +325,10 @@ async function t212With({ key, secret, env }, endpoint) {
 // ---------- Ligações: testar uma corretora antes de guardar ----------
 // O teste corre no servidor com a chave colada; só uma ligação testada com sucesso pode ser guardada.
 const connTests = new Map(); // testId -> { cred, result, at }
-const xmlAttrs = (tag) => Object.fromEntries([...tag.matchAll(/(\w+)="([^"]*)"/g)].map((m) => [m[1], m[2]]));
+const XML_ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+const xmlText = (s) => s.replace(/&(amp|lt|gt|quot|apos|#\d+|#x[\da-f]+);/gi, (m, e) => e[0] === '#'
+  ? String.fromCodePoint(e[1] === 'x' || e[1] === 'X' ? parseInt(e.slice(2), 16) : Number(e.slice(1))) : XML_ENT[e.toLowerCase()]);
+const xmlAttrs = (tag) => Object.fromEntries([...tag.matchAll(/(\w+)="([^"]*)"/g)].map((m) => [m[1], xmlText(m[2])]));
 
 async function testTrading212(cred) {
   const [cash, portfolio] = [await t212With(cred, '/equity/account/cash'), await t212With(cred, '/equity/portfolio')];
@@ -330,7 +336,18 @@ async function testTrading212(cred) {
 }
 
 async function testIbkr(cred) {
-  // Flex Web Service: o token só corre relatórios já criados no Client Portal; não consegue fazer ordens.
+  const xml = await ibkrFlex(cred);
+  const pos = [...xml.matchAll(/<OpenPosition\s[^>]*>/g)].map((m) => xmlAttrs(m[0]));
+  const value = pos.reduce((s, p) => s + (Number(p.positionValue) || 0) * (Number(p.fxRateToBase) || 1), 0);
+  const cashTag = [...xml.matchAll(/<CashReportCurrency\s[^>]*>/g)].map((m) => xmlAttrs(m[0])).find((c) => c.currency === 'BASE_SUMMARY');
+  const stmt = (xml.match(/<FlexStatement\s[^>]*>/) || [])[0];
+  const acc = stmt ? xmlAttrs(stmt).accountId : null;
+  return { positions: pos.length, value: Math.round(value * 100) / 100, cash: cashTag ? Number(cashTag.endingCash) : null,
+    currency: null, account: acc ? acc.slice(0, 1) + '****' + acc.slice(-4) : null };
+}
+
+// Flex Web Service: o token só corre relatórios já criados no Client Portal; não consegue fazer ordens.
+async function ibkrFlex(cred) {
   const base = 'https://ndcdyn.interactivebrokers.com/AccountManagement/FlexWebService';
   const q = (u) => fetch(u, { headers: { 'User-Agent': 'Moneta/1.0' } }).then((r) => r.text());
   const sent = await q(`${base}/SendRequest?t=${encodeURIComponent(cred.key)}&q=${encodeURIComponent(cred.secret)}&v=3`);
@@ -346,13 +363,7 @@ async function testIbkr(cred) {
     await new Promise((r) => setTimeout(r, 2500));
   }
   if (!/<FlexQueryResponse/.test(xml)) throw new Error('A IBKR ainda está a preparar o relatório. Tenta outra vez dentro de um minuto.');
-  const pos = [...xml.matchAll(/<OpenPosition\s[^>]*>/g)].map((m) => xmlAttrs(m[0]));
-  const value = pos.reduce((s, p) => s + (Number(p.positionValue) || 0) * (Number(p.fxRateToBase) || 1), 0);
-  const cashTag = [...xml.matchAll(/<CashReportCurrency\s[^>]*>/g)].map((m) => xmlAttrs(m[0])).find((c) => c.currency === 'BASE_SUMMARY');
-  const stmt = (xml.match(/<FlexStatement\s[^>]*>/) || [])[0];
-  const acc = stmt ? xmlAttrs(stmt).accountId : null;
-  return { positions: pos.length, value: Math.round(value * 100) / 100, cash: cashTag ? Number(cashTag.endingCash) : null,
-    currency: null, account: acc ? acc.slice(0, 1) + '****' + acc.slice(-4) : null };
+  return xml;
 }
 
 const CONN_TESTS = { trading212: testTrading212, ibkr: testIbkr };
@@ -368,7 +379,7 @@ async function getInstruments() {
   try {
     const list = await t212('/equity/metadata/instruments');
     const map = {};
-    for (const i of list) map[i.ticker] = { name: i.name || i.shortName, short: i.shortName, currencyCode: i.currencyCode, type: i.type };
+    for (const i of list) map[i.ticker] = { name: i.name || i.shortName, short: i.shortName, currencyCode: i.currencyCode, type: i.type, isin: i.isin || null };
     fs.writeFileSync(INSTR_FILE, JSON.stringify({ at: Date.now(), map }));
     return (instruments = map);
   } catch (e) {
@@ -488,6 +499,8 @@ async function getBroker(force = false) {
       const short = meta.short || p.ticker.replace(/_.*$/, '');
       return {
         ticker: p.ticker,
+        broker: 't212',
+        isin: meta.isin || null,
         sector: sectorOf(p.ticker, short),
         dividend: dividendOf(p.ticker, short, meta.name),
         logo: tickerInfo(short).domain || tickerInfo(short).logo ? '/api/logo/' + encodeURIComponent(short) : null,
@@ -528,6 +541,108 @@ async function getBroker(force = false) {
   }
 }
 
+// ---------- Interactive Brokers (Flex, só leitura) ----------
+// O relatório Flex é um extrato diário: preços do fecho anterior. Guardado em ibkr-cache.json durante 6 horas
+// (a IBKR limita os pedidos e cada relatório demora uns segundos a ficar pronto).
+const IBKR_FILE = path.join(DATA_DIR, 'ibkr-cache.json');
+const IBKR_TTL = 6 * 3600_000;
+let ibkrCache = null; // { at, value }
+try { ibkrCache = JSON.parse(fs.readFileSync(IBKR_FILE, 'utf8')); } catch {}
+let ibkrLoading = null;
+const ymdIso = (s) => /^\d{8}/.test(s || '') ? `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}` : (s || '').slice(0, 10) || null;
+
+function parseIbkr(xml, rates) {
+  const attrs = (re) => [...xml.matchAll(re)].map((m) => xmlAttrs(m[0]));
+  const stmt = attrs(/<FlexStatement\s[^>]*>/g)[0] || {};
+  const info = attrs(/<AccountInformation\s[^>]*>/g)[0] || {};
+  let pos = attrs(/<OpenPosition\s[^>]*>/g).filter((p) => p.assetCategory !== 'CASH');
+  if (pos.some((p) => p.levelOfDetail)) pos = pos.filter((p) => !p.levelOfDetail || p.levelOfDetail === 'SUMMARY');
+  // Moeda base da conta: a do AccountInformation, ou a de uma posição com câmbio 1
+  const baseCcy = info.currency || (pos.find((p) => Number(p.fxRateToBase) === 1) || {}).currency || 'EUR';
+  const toEUR = (n, ccy) => convert(n, ccy, BASE_CCY, rates);
+  const positions = pos.map((p) => {
+    const qty = Number(p.position) || 0, fx = Number(p.fxRateToBase) || 1, ccy = p.currency || baseCcy;
+    const price = Number(p.markPrice) || 0, avg = Number(p.costBasisPrice) || null;
+    const pnlLocal = p.fifoPnlUnrealized != null && p.fifoPnlUnrealized !== '' ? Number(p.fifoPnlUnrealized) : avg != null ? (price - avg) * qty : 0;
+    const value = toEUR((Number(p.positionValue) || qty * price) * fx, baseCcy);
+    const ppl = toEUR(pnlLocal * fx, baseCcy) || 0;
+    const short = p.symbol || p.isin || '?';
+    const type = p.assetCategory === 'STK' ? (/ETF/i.test(p.subCategory || '') ? 'ETF' : 'STOCK') : p.assetCategory === 'FUND' ? 'ETF' : p.assetCategory || '';
+    return {
+      ticker: 'ibkr:' + (p.conid || short),
+      broker: 'ibkr',
+      isin: p.isin || null,
+      sector: sectorOf('ibkr:' + (p.conid || short), short),
+      dividend: dividendOf(short, short, p.description),
+      logo: tickerInfo(short).domain || tickerInfo(short).logo ? '/api/logo/' + encodeURIComponent(short) : null,
+      alias: tickerInfo(short).alias || null,
+      name: p.description || short,
+      short,
+      type,
+      quantity: qty,
+      averagePrice: avg,
+      currentPrice: price,
+      priceCcy: ccy,
+      value,
+      ppl,
+      pplPct: value != null && value - ppl > 0 ? (ppl / (value - ppl)) * 100 : null,
+      since: p.openDateTime || null,
+    };
+  }).sort((a, b) => (b.value || 0) - (a.value || 0));
+  // Dinheiro por moeda (a IBKR pode ter euros e dólares ao mesmo tempo)
+  const cashRows = attrs(/<CashReportCurrency\s[^>]*>/g);
+  const cash = cashRows.filter((c) => c.currency && c.currency !== 'BASE_SUMMARY' && Math.abs(Number(c.endingCash) || 0) >= 0.005)
+    .map((c) => ({ ccy: c.currency, amount: round(Number(c.endingCash)), eur: round(toEUR(Number(c.endingCash), c.currency) || 0) }));
+  const baseSum = cashRows.find((c) => c.currency === 'BASE_SUMMARY');
+  const freeEUR = cash.length ? cash.reduce((s, c) => s + c.eur, 0) : baseSum ? toEUR(Number(baseSum.endingCash), baseCcy) || 0 : 0;
+  const posEUR = positions.reduce((s, p) => s + (p.value || 0), 0), ppl = positions.reduce((s, p) => s + (p.ppl || 0), 0);
+  return {
+    broker: 'ibkr',
+    currency: BASE_CCY,
+    total: round(posEUR + freeEUR), totalEUR: round(posEUR + freeEUR),
+    free: round(freeEUR), freeEUR: round(freeEUR),
+    invested: round(posEUR - ppl), ppl: round(ppl),
+    cash,
+    positions,
+    statementDate: ymdIso(stmt.toDate || (pos[0] || {}).reportDate || stmt.whenGenerated),
+    fxDate: fx.date || null, // dia dos câmbios do BCE usados para converter o dinheiro em dólares
+    fetchedAt: new Date().toISOString(),
+  };
+}
+
+// Depois de uma falha, espera 15 min antes de pedir outra vez (a IBKR limita os pedidos por minuto)
+const IBKR_RETRY = 15 * 60_000;
+let ibkrErr = null; // { at, keyId, message }
+async function getIbkr(force = false) {
+  const k = activeKey('ibkr');
+  if (!k) return null;
+  const mine = () => (ibkrCache && ibkrCache.keyId === k.id ? ibkrCache.value : null);
+  const failed = () => (ibkrErr && ibkrErr.keyId === k.id ? ibkrErr : null);
+  // Extrato guardado marcado como antigo, ou só o erro quando ainda não há nenhum
+  const fallback = () => {
+    const c = mine(), e = failed();
+    return c ? { ...c, stale: true, ...(e ? { error: e.message } : {}) } : e ? { broker: 'ibkr', error: e.message } : null;
+  };
+  const cached = mine();
+  if (!force && cached && Date.now() - ibkrCache.at < IBKR_TTL) return cached;
+  if (!force && failed() && Date.now() - ibkrErr.at < IBKR_RETRY) return fallback();
+  // Um pedido de cada vez: o relatório demora e a página pede o resumo várias vezes
+  ibkrLoading ||= (async () => {
+    try {
+      const value = parseIbkr(await ibkrFlex(k), await getRates());
+      ibkrCache = { at: Date.now(), keyId: k.id, value };
+      ibkrErr = null;
+      try { fs.writeFileSync(IBKR_FILE, JSON.stringify(ibkrCache)); } catch {}
+      return value;
+    } catch (e) {
+      ibkrErr = { at: Date.now(), keyId: k.id, message: e.message };
+      return fallback();
+    } finally { ibkrLoading = null; }
+  })();
+  // Com um extrato antigo guardado, responde já com ele e atualiza em segundo plano
+  return cached && !force ? cached : ibkrLoading;
+}
+
 // ---------- PPR / fundos: entregas + cotação ----------
 // Um ativo com `movements` (entregas) e `unitPrice` (valor da UP) tem o valor calculado:
 // unidades × cotação. Sem entregas, usa os campos manuais (value, contribYear, contribTotal).
@@ -562,7 +677,7 @@ const enriched = () => data.assets.map(enrich);
 const LIABILITY = new Set(['divida']);
 
 async function summary() {
-  const broker = await getBroker();
+  const [broker, ibkr] = await Promise.all([getBroker(), getIbkr()]);
   const byCat = {};
   let assetsTotal = 0, liabilities = 0;
   for (const a of enriched()) {
@@ -570,26 +685,27 @@ async function summary() {
     if (LIABILITY.has(a.type)) liabilities += v;
     else { assetsTotal += v; byCat[a.type] = (byCat[a.type] || 0) + v; }
   }
-  const brokerOk = broker && (!broker.error || broker.stale);
-  const brokerEUR = brokerOk ? broker.totalEUR || 0 : 0;
-  if (brokerEUR) {
-    // O dinheiro livre na Trading 212 conta como fundo de emergência; o resto como investimentos.
-    const freeEUR = Math.min(brokerEUR, broker.freeEUR || 0);
+  for (const b of [broker, ibkr]) {
+    const ok = b && (!b.error || b.stale);
+    const bEUR = ok ? b.totalEUR || 0 : 0;
+    if (!bEUR) continue;
+    // O dinheiro livre de cada corretora conta como "Dinheiro livre"; o resto como investimentos.
+    const freeEUR = Math.min(bEUR, b.freeEUR || 0);
     if (freeEUR > 0) byCat.emergencia = (byCat.emergencia || 0) + freeEUR;
     // O investido divide-se pelo tipo de cada posição (ações, ETFs, …), ajustado para somar o total real.
-    const investedEUR = brokerEUR - freeEUR;
+    const investedEUR = bEUR - freeEUR;
     if (investedEUR > 0) {
       const rates = await getRates();
       const byType = {};
-      for (const p of broker.positions || []) {
+      for (const p of b.positions || []) {
         const cat = p.type === 'STOCK' ? 'acoes' : p.type === 'ETF' ? 'etf' : 'investimento';
-        byType[cat] = (byType[cat] || 0) + (convert(p.value, broker.currency, BASE_CCY, rates) || 0);
+        byType[cat] = (byType[cat] || 0) + (convert(p.value, b.currency, BASE_CCY, rates) || 0);
       }
       const sum = Object.values(byType).reduce((s, v) => s + v, 0);
       if (!sum) byType.investimento = investedEUR;
       for (const [k, v] of Object.entries(byType)) byCat[k] = (byCat[k] || 0) + (sum ? (v / sum) * investedEUR : v);
     }
-    assetsTotal += brokerEUR;
+    assetsTotal += bEUR;
   }
   const net = assetsTotal - liabilities;
 
@@ -602,7 +718,7 @@ async function summary() {
   recordGoalHistory(); // e o valor de cada objetivo nesse dia
   save();
 
-  return { currency: BASE_CCY, net, assetsTotal, liabilities, byCat, broker, history: data.history };
+  return { currency: BASE_CCY, net, assetsTotal, liabilities, byCat, broker, ibkr, history: data.history };
 }
 const round = (n) => Math.round(n * 100) / 100;
 const mapRound = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, round(v)]));
@@ -629,7 +745,10 @@ function publicState() {
     },
   };
 }
-function resetBroker() { accountInfo = null; brokerCache = null; instruments = null; hist = null; }
+function resetBroker() {
+  accountInfo = null; brokerCache = null; instruments = null; hist = null;
+  ibkrCache = null; ibkrErr = null; try { fs.unlinkSync(IBKR_FILE); } catch {}
+}
 
 // ---------- Histórico da Trading 212: vendas, dividendos e juros (para estimar o IRS) ----------
 // Precisa das permissões history:orders, history:dividends e history:transactions na chave (só leitura).
@@ -1065,7 +1184,7 @@ const server = http.createServer(async (req, res) => {
       data.sectors ||= {};
       if (sector) data.sectors[b.ticker] = sector; else delete data.sectors[b.ticker];
       save();
-      if (brokerCache) for (const x of brokerCache.value.positions) x.sector = sectorOf(x.ticker, x.short);
+      for (const c of [brokerCache, ibkrCache]) if (c?.value?.positions) for (const x of c.value.positions) x.sector = sectorOf(x.ticker, x.short);
       return send(res, 200, { ok: true });
     }
 
@@ -1126,7 +1245,7 @@ const server = http.createServer(async (req, res) => {
         summary: { ...t.result, at: now } };
       data.keys.push(k);
       data.activeKeys[k.platform] = k.id; // a ligação nova passa a ser a usada
-      if (k.platform === 'trading212') resetBroker();
+      if (BROKERS.includes(k.platform)) resetBroker();
       save();
       return send(res, 200, { ...publicState(), savedId: k.id });
     }

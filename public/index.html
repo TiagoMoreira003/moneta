@@ -256,8 +256,48 @@ button.lg-row.open { border-bottom-color: transparent; }
 .lg-grp b { width: 44px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
 .lg-note { padding: 14px; border-radius: 12px; background: #18201c; color: var(--ink-2); font-size: 12px; line-height: 18px; }
 .lg-note-t { color: var(--ink); font-weight: 700; } .lg-note-t.warn { color: #f5b84b; }
+/* Corretoras: Todas / Trading 212 / IBKR */
+.m-only { display: none; }
+.ib-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: -6px 0 22px; padding: 0 4px; }
+.ib-tabs { display: flex; gap: 6px; padding: 4px; border-radius: 16px; background: rgba(255,255,255,.035); border: 1px solid var(--hair); flex-shrink: 0; }
+.ib-tab { display: grid; grid-template-columns: auto auto; grid-template-areas: "n v" "s s"; align-items: baseline; justify-content: start; column-gap: 8px; row-gap: 1px; text-align: left;
+  padding: 8px 14px; border-radius: 12px; background: transparent; border: 0; color: var(--ink-2); white-space: nowrap; min-height: 44px; min-width: 0; }
+.ib-tab:hover { background: rgba(255,255,255,.04); color: var(--ink); }
+.ib-tab .ib-n { grid-area: n; font-size: 13px; font-weight: 600; }
+.ib-tab > b { grid-area: v; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); }
+.ib-tab .ib-s { grid-area: s; font-size: 11px; color: var(--muted); display: inline-flex; align-items: center; gap: 5px; }
+/* Bolinha de frescura: verde em dia, âmbar atrasada ou em cache, vermelha sem dados */
+.ib-s::before, .ib-ok::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #3ddc97; flex-shrink: 0; }
+.ib-s.warn::before, .ib-ok.warn::before { background: #f5b84b; }
+.ib-s.err::before, .ib-ok.err::before { background: #ff6b6b; }
+.ib-s.none::before, .ib-ok.none::before { display: none; }
+.ib-tab.on, .ib-tab.on:hover { background: #eef4f0; color: #06120c; }
+.ib-tab.on > b, .ib-tab.on .ib-n { color: #06120c; } .ib-tab.on .ib-s { color: #3d4a43; }
+.ib-hint { margin: 0; font-size: 12px; line-height: 18px; color: var(--muted); max-width: 360px; text-align: right; }
+.ib-tag { display: inline-block; padding: 2px 6px; border-radius: 5px; background: rgba(255,255,255,.07); color: var(--ink); font-size: 10px; font-weight: 800; letter-spacing: .02em; line-height: 14px; text-align: center; }
+.ib-rail { display: flex; flex-direction: column; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--hair); }
+.ib-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
+.ib-row .ib-tag { margin-top: 1px; }
+.ib-rn, .ib-rv { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 13px; }
+.ib-rn .tsub, .ib-rv .tsub { font-size: 11px; line-height: 15px; }
+.ib-rv { align-items: flex-end; text-align: right; font-variant-numeric: tabular-nums; } .ib-rv b, .ib-rn b { font-weight: 800; }
+.ib-ok { display: inline-flex; align-items: center; gap: 5px; }
+.ib-fx { margin: -4px 0 0 50px; padding: 8px 10px; border-radius: 8px; background: #18201c; }
+.ib-fx .tsub { font-size: 11px; line-height: 15px; color: var(--ink-2); }
+.ib-tot { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); padding-top: 2px; }
+.ib-tot b { color: var(--ink); font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; }
+.cash { display: flex; flex-direction: column; gap: 10px; }
+.cash-r { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-size: 13px; }
+.cash-r b { font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
+.cash-r .tsub { font-size: 11px; grid-column: 1 / -1; }
+.lg-sect { display: flex; flex-direction: column; gap: 18px; }
+.lg-detail.has-split > .lg-split { grid-column: 1 / -1; gap: 8px; }
+.lg-sp { display: grid; grid-template-columns: 44px minmax(0, 1fr) 90px 70px; gap: 10px; align-items: center; font-variant-numeric: tabular-nums; }
+.lg-sp .sp-v { text-align: right; font-weight: 800; }
+.lg-sp .sp-pl { text-align: right; font-weight: 600; }
+.lg-sp .tsub { font-size: 12px; }
 @media (max-width: 1240px) { .c-pr { display: none !important; } .c-pos { width: 220px; } }
-@media (max-width: 1100px) { .lg-body { grid-template-columns: minmax(0, 1fr); } .lg-detail { grid-template-columns: 1fr 1fr; } .lg-tax { grid-column: 1 / -1; } }
+@media (max-width: 1100px) { .ib-bar { flex-wrap: wrap; } .ib-hint { text-align: left; } .lg-body { grid-template-columns: minmax(0, 1fr); } .lg-detail { grid-template-columns: 1fr 1fr; } .lg-tax { grid-column: 1 / -1; } }
 @media (max-width: 900px) { .inv-totals { gap: 18px; } .inv-totals > div { align-items: flex-start; } }
 @media (max-width: 720px) {
   .c-sec, .c-w { display: none !important; }
@@ -266,8 +306,21 @@ button.lg-row.open { border-bottom-color: transparent; }
   .c-pl { width: 68px; }
   .pl-a { display: none; } .pl-m { display: inline !important; }
   .lg-table { padding: 4px 14px; }
-  .lg-detail { padding-left: 0; grid-template-columns: 1fr; }
+  .lg-detail { padding-left: 0; grid-template-columns: 1fr 1fr; }
   .lg-cap { flex-direction: column; gap: 4px; }
+  .d-only { display: none !important; } .m-only { display: inline; }
+  /* Corretoras no telemóvel: três separadores lado a lado, alvos de 44 px */
+  .ib-bar { flex-direction: column; align-items: stretch; margin: 0 0 18px; padding: 0; gap: 8px; }
+  .ib-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; }
+  .ib-tab { grid-template-columns: minmax(0, 1fr); grid-template-areas: "n" "v" "s"; padding: 8px 10px; }
+  .ib-tab > * { overflow: hidden; text-overflow: ellipsis; }
+  .ib-hint { text-align: left; max-width: none; }
+  .lg-sp { grid-template-columns: 40px minmax(0, 1fr) auto; row-gap: 2px; }
+  .lg-sp .sp-meta { grid-column: 2 / -1; display: block; }
+  /* A coluna da direita desce e parte-se em dois cartões: corretoras e setores */
+  .lg-rail.has-ib { padding: 0; gap: 14px; background: none; box-shadow: none !important; }
+  .lg-rail.has-ib > .ib-rail, .lg-rail.has-ib > .lg-sect { padding: 18px; border-radius: 18px; border-bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0) 45%), var(--card); box-shadow: 0 0 0 1px var(--hair); }
 }
 @media (max-width: 560px) { .inv-totals .it-main { width: 100%; } }
 /* Objetivos */
@@ -1622,51 +1675,206 @@ Chart.defaults.color = css('--muted');
 Object.assign(Chart.defaults.plugins.tooltip, { backgroundColor: 'rgba(28,28,30,.92)', padding: 10, cornerRadius: 10, titleFont: { weight: '600' }, boxPadding: 4 });
 Chart.defaults.elements.arc.borderRadius = 4;
 
+// ---------- Investimentos: várias corretoras (Todas / Trading 212 / IBKR) ----------
+let invSel = 'all';
+try { invSel = localStorage.getItem('invSel') || 'all'; } catch {}
+function setInvSel(v) { invSel = v; invOpen = null; try { localStorage.setItem('invSel', v); } catch {} renderBroker(); }
+// Corretoras ligadas e com dados (uma leitura antiga também serve, marcada como tal)
+const BROKER_FULL = { t212: 'Trading 212', ibkr: 'Interactive Brokers' };
+function brokerList() {
+  const out = [];
+  if (state.settings.t212.configured) out.push({ id: 't212', name: 'Trading 212', tile: 'T212', d: sum.broker });
+  if ((state.keys || []).some((k) => k.platform === 'ibkr' && k.active)) out.push({ id: 'ibkr', name: 'IBKR', tile: 'IBKR', d: sum.ibkr });
+  for (const b of out) {
+    b.full = BROKER_FULL[b.id];
+    b.ok = Boolean(b.d && b.d.positions && (!b.d.error || b.d.stale));
+    b.fresh = brokerFresh(b);
+  }
+  return out;
+}
+const ddmm = (iso) => iso ? new Date(iso + 'T12:00').toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit' }) : '';
+const ymdLocal = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+// Dias úteis desde o extrato até hoje (sábados e domingos não contam)
+function workdaysSince(iso) {
+  const d = new Date(iso + 'T12:00'), today = new Date();
+  today.setHours(12, 0, 0, 0);
+  let n = 0;
+  for (d.setDate(d.getDate() + 1); d <= today; d.setDate(d.getDate() + 1)) if (d.getDay() % 6) n++;
+  return n;
+}
+// Frescura de cada corretora: texto longo, texto curto (telemóvel) e a cor da bolinha.
+// IBKR: verde até 1 dia útil sem extrato novo; âmbar a partir de 2 (ou com o extrato guardado depois de um erro); vermelho sem dados.
+function brokerFresh(b) {
+  if (!b.ok) return b.d?.error ? { long: 'Sem dados', short: 'sem dados', tone: 'err' } : { long: 'A ler…', short: 'a ler…', tone: 'none' };
+  if (b.id === 'ibkr') {
+    const d = b.d.statementDate, now = new Date();
+    const when = !d ? '' : d === ymdLocal(now) ? 'hoje' : d === ymdLocal(new Date(now - 864e5)) ? 'ontem' : ddmm(d);
+    const late = !d || workdaysSince(d) >= 2;
+    return { long: when ? 'Extrato de ' + when : 'Extrato diário', short: when || 'extrato', tone: b.d.stale || late ? 'warn' : '' };
+  }
+  if (b.d.stale) return { long: 'Dados em cache', short: 'em cache', tone: 'warn' };
+  const m = Math.max(0, Math.round((Date.now() - new Date(b.d.fetchedAt)) / 60000));
+  const t = m < 1 ? 'agora' : m < 60 ? `há ${m} min` : 'às ' + new Date(b.d.fetchedAt).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+  return { long: 'Atualizado ' + t, short: t, tone: '' };
+}
+const fmtUn = (n) => (n || 0).toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// Agrupa as posições de todas as corretoras: o mesmo ISIN (ou, sem ISIN, o mesmo símbolo) é um só grupo
+function groupPositions(list) {
+  const groups = [], byIsin = new Map(), bySym = new Map(), keys = new Set();
+  for (const b of list) for (const p of b.d.positions || []) {
+    const isin = (p.isin || '').toUpperCase(), sym = (p.short || '').toUpperCase();
+    let g = isin ? byIsin.get(isin) : null;
+    if (!g && sym) { const s = bySym.get(sym); if (s && (!isin || !s.isin) && !s.brokers.has(b.id)) g = s; }
+    if (!g) {
+      let key = 'p:' + (isin || sym || p.ticker);
+      while (keys.has(key)) key += '+';
+      keys.add(key);
+      g = { key, isin, items: [], brokers: new Set() };
+      groups.push(g);
+    }
+    g.items.push({ b, p }); g.brokers.add(b.id);
+    if (isin) { g.isin ||= isin; byIsin.set(isin, g); }
+    if (sym && !bySym.has(sym)) bySym.set(sym, g);
+  }
+  return groups;
+}
+// Uma linha da tabela a partir das partes visíveis de um grupo (soma quantidades, valor e lucro)
+function groupRow(g, items) {
+  const parts = items.map(({ b, p }) => ({ broker: b.id, tile: b.tile, quantity: p.quantity || 0, averagePrice: p.averagePrice, priceCcy: p.priceCcy,
+    value: p.value || 0, ppl: p.ppl || 0, fresh: b.id === 'ibkr' ? 'fecho de ' + (ddmm(b.d.statementDate) || 'ontem') : b.fresh.short }));
+  // Nome, setor e dividendos vêm sempre da primeira corretora do grupo, para a linha ler-se igual em todos os separadores
+  const base = g.items[0].p, first = items[0].p;
+  const r = { ...first, name: base.name, alias: base.alias, short: base.short, type: base.type, sector: base.sector, dividend: base.dividend, key: g.key, parts };
+  if (parts.length > 1) {
+    r.quantity = parts.reduce((s, x) => s + x.quantity, 0);
+    r.value = parts.reduce((s, x) => s + x.value, 0);
+    r.ppl = parts.reduce((s, x) => s + x.ppl, 0);
+    // Custo médio ponderado só quando as partes estão na mesma moeda
+    const same = parts.every((x) => x.priceCcy === parts[0].priceCcy && x.averagePrice != null);
+    r.averagePrice = same && r.quantity ? parts.reduce((s, x) => s + x.averagePrice * x.quantity, 0) / r.quantity : null;
+    r.pplPct = r.value - r.ppl > 0 ? r.ppl / (r.value - r.ppl) * 100 : null;
+  }
+  return r;
+}
+// A carteira que a página mostra: uma corretora ou todas juntas.
+// As cores de cada posição saem da ordem em "Todas" e ficam iguais nos separadores de cada corretora.
+function invView(list) {
+  const okList = list.filter((b) => b.ok);
+  const shown = invSel === 'all' ? okList : okList.filter((b) => b.id === invSel);
+  const ids = new Set(shown.map((b) => b.id));
+  const groups = groupPositions(okList);
+  const gv = (g) => g.items.reduce((s, x) => s + (x.p.value || 0), 0);
+  const color = new Map([...groups].sort((a, b) => gv(b) - gv(a)).map((g, i) => [g.key, posColor(i)]));
+  const positions = [];
+  for (const g of groups) {
+    const items = g.items.filter((x) => ids.has(x.b.id));
+    if (!items.length) continue;
+    positions.push({ ...groupRow(g, items), color: color.get(g.key), elsewhere: g.items.filter((x) => !ids.has(x.b.id)) });
+  }
+  const s = (f) => shown.reduce((t, b) => t + (Number(b.d[f]) || 0), 0);
+  return {
+    shown, positions,
+    total: s('totalEUR'), invested: s('invested'), ppl: s('ppl'), free: shown.reduce((t, b) => t + (b.d.freeEUR ?? b.d.free ?? 0), 0),
+    result: shown.length === 1 && shown[0].id === 't212' ? shown[0].d.result : null, // a IBKR não manda o lucro realizado no extrato
+  };
+}
+const both = (long, short) => long === short ? long : `<span class="d-only">${long}</span><span class="m-only">${short}</span>`;
+function brokerTabs(list) {
+  if (list.length < 2) return '';
+  const ok = list.filter((b) => b.ok);
+  const all = ok.reduce((t, b) => t + (b.d.totalEUR || 0), 0);
+  const nAll = groupPositions(ok).length;
+  const tab = (id, label, val, sub, tone) => `<button type="button" role="tab" aria-selected="${invSel === id}" class="ib-tab${invSel === id ? ' on' : ''}" data-broker="${id}" onclick="setInvSel('${id}')"><span class="ib-n">${label}</span><b>${val}</b><span class="ib-s ${tone}">${sub}</span></button>`;
+  // A IBKR manda um extrato por dia: diz sempre de quando são os valores dela
+  const ib = ok.find((b) => b.id === 'ibkr'), t212 = ok.find((b) => b.id === 't212');
+  let hint = '';
+  if (ib) {
+    const d = ddmm(ib.d.statementDate) || 'ontem';
+    if (invSel === 'ibkr') {
+      const wd = new Date().getDay(); // de segunda a sexta o fecho de hoje chega amanhã; ao fim de semana, o de segunda chega na terça
+      const next = ib.fresh.tone === 'warn' ? 'Ainda não chegou um extrato mais recente.' : `O próximo chega ${wd % 6 ? 'amanhã' : 'na terça'} de manhã.`;
+      hint = `Valores do extrato Flex de ${d}, fecho do mercado. ${next}`;
+    } else if (invSel === 'all') {
+      hint = both(`A IBKR envia um extrato por dia, por isso os valores dela são do fecho de ${d}.${t212 ? ' A Trading 212 é lida ao minuto.' : ''}`, `A IBKR envia um extrato por dia: valores do fecho de ${d}.`);
+    }
+  }
+  return `<div class="ib-bar"><div class="ib-tabs" role="tablist" aria-label="Corretora">
+      ${tab('all', 'Todas', eur0(all), `${nAll} ${nAll === 1 ? 'posição' : 'posições'}`, 'none')}
+      ${list.map((b) => tab(b.id, b.name, b.ok ? eur0(b.d.totalEUR) : '–', both(b.fresh.long, b.fresh.short), b.fresh.tone)).join('')}
+    </div>${hint ? `<p class="ib-hint">${hint}</p>` : ''}</div>`;
+}
+
 function renderBroker() {
-  const el = document.getElementById('brokerBody'), meta = document.getElementById('brokerMeta');
-  const br = sum.broker;
-  if (!state.settings.t212.configured) { el.innerHTML = `<div class="empty">Sem conta ligada. <a href="#" onclick="openSettings('ligacoes');return false">Adicionar chave API</a></div>`; meta.textContent = ''; return; }
-  if (!br || (br.error && !br.positions)) { el.innerHTML = `<div class="empty">Não foi possível ler a conta.</div>`; meta.textContent = ''; return; }
-  const c = br.currency;
-  meta.innerHTML = `Trading 212 · ${br.positions.length} posições · ` + (br.stale ? '<span class="stale">dados em cache</span>' : `atualizado ${new Date(br.fetchedAt).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`);
-  const invPct = br.invested ? br.ppl / br.invested * 100 : null;
-  // Totais no cabeçalho: o valor da conta em destaque, o resto mais pequeno
-  document.getElementById('invTotals').innerHTML = `
-    <div class="it-main"><span class="tsub">Valor da conta</span><b>${eur0(br.total, c)}</b></div>
-    <div><span class="tsub">${br.ppl >= 0 ? 'Lucro' : 'Prejuízo'} em aberto</span><b class="${sign(br.ppl)}">${br.ppl >= 0 ? '+' : ''}${eur0(br.ppl, c)}${invPct != null ? ' · ' + pct1(invPct).replace(/^\+/, '') : ''}</b></div>
-    <div><span class="tsub">Investido</span><b>${eur0(br.invested, c)}</b></div>
-    <div><span class="tsub">Lucro realizado</span><b class="${sign(br.result)}">${eur0(br.result, c)}</b></div>
-    <div><span class="tsub">Dinheiro livre</span><b>${eur0(br.free, c)}</b></div>`;
-  if (!br.positions.length) { el.innerHTML = '<div class="card"><div class="empty">Sem posições abertas.</div></div>'; return; }
+  const el = document.getElementById('brokerBody'), meta = document.getElementById('brokerMeta'), totals = document.getElementById('invTotals');
+  const list = brokerList();
+  if (!list.length) { el.innerHTML = `<div class="empty">Sem corretora ligada. <a href="#" onclick="openSettings('ligacoes');return false">Adicionar uma ligação</a></div>`; meta.textContent = ''; totals.innerHTML = ''; return; }
+  if (invSel !== 'all' && !list.some((b) => b.id === invSel)) invSel = 'all';
+  if (list.length < 2) invSel = 'all';
+  const v = invView(list), c = 'EUR';
+  // A Trading 212 já tem o seu aviso no topo da app; aqui só os das outras corretoras sem dados
+  const failed = list.filter((b) => !b.ok && b.d?.error && b.id !== 't212');
+  const banners = failed.map((b) => `<div class="banner err"><div class="grow">Não foi possível ler a ${b.name}: ${esc(b.d.error)}</div><button type="button" onclick="openSettings('ligacoes')">Rever ligação</button></div>`).join('');
+  if (!v.shown.length) {
+    meta.textContent = list.length > 1 ? `${list.length} corretoras` : list[0].full; totals.innerHTML = '';
+    el.innerHTML = brokerTabs(list) + (banners || `<div class="card"><div class="empty">A ler ${invSel === 'ibkr' ? 'o extrato da IBKR (demora uns segundos)' : 'a conta'}…</div></div>`);
+    return;
+  }
+  const multi = v.shown.length > 1, several = list.length > 1;
+  const one = multi ? null : v.shown[0];
+  const nPos = v.positions.length;
+  meta.textContent = (multi ? `${v.shown.length} corretoras` : one.full) + ` · ${nPos} ${nPos === 1 ? 'posição' : 'posições'}`;
+  const invPct = v.invested ? v.ppl / v.invested * 100 : null;
+  // Totais no cabeçalho: o valor em destaque, o resto mais pequeno
+  totals.innerHTML = `
+    <div class="it-main"><span class="tsub">${multi ? 'Valor total' : 'Valor da conta'}</span><b>${eur0(v.total, c)}</b></div>
+    <div><span class="tsub">${v.ppl >= 0 ? 'Lucro' : 'Prejuízo'} em aberto</span><b class="${sign(v.ppl)}">${v.ppl >= 0 ? '+' : ''}${eur0(v.ppl, c)}${invPct != null ? ' · ' + pct1(invPct).replace(/^\+/, '') : ''}</b></div>
+    <div><span class="tsub">Investido</span><b>${eur0(v.invested, c)}</b></div>
+    ${v.result != null ? `<div><span class="tsub">Lucro realizado</span><b class="${sign(v.result)}">${eur0(v.result, c)}</b></div>` : ''}
+    <div><span class="tsub">${both('Dinheiro livre', 'Livre')}</span><b>${eur0(v.free, c)}</b></div>`;
+  if (!nPos) { el.innerHTML = brokerTabs(list) + banners + '<div class="card"><div class="empty">Sem posições abertas.</div></div>'; return; }
   // Ledger (Paper, mockup A): faixa de pesos, tabela e coluna de setores
-  const tot = posTotal(br);
-  const order = [...br.positions].sort((a, b) => (b.value || 0) - (a.value || 0));
+  const tot = v.positions.reduce((s, p) => s + (p.value || 0), 0);
+  const order = [...v.positions].sort((a, b) => (b.value || 0) - (a.value || 0));
   const w = (p) => tot ? (p.value || 0) / tot * 100 : 0;
   const maxW = w(order[0]) || 1;
   const top5 = order.slice(0, 5).reduce((s, p) => s + w(p), 0);
   const f1 = (n) => n.toFixed(1).replace('.', ',');
-  meta.innerHTML = `Trading 212 · ${br.positions.length} posições`;
-  el.innerHTML = `
+  // Legenda da faixa: de que carteira se fala e, numa só corretora, o que também está na outra
+  const scope = multi ? 'na carteira investida das duas corretoras' : several ? `na conta ${one.name}` : 'na carteira investida';
+  const shared = multi ? [] : order.filter((p) => p.elsewhere.length);
+  const other = shared.length ? shared[0].elsewhere[0].b.tile : '';
+  const capExtra = shared.length
+    ? `${shared.length} ${shared.length === 1 ? 'posição também' : 'posições também'} na ${other}: <b>${shared.slice(0, 3).map((p) => esc(p.short)).join(', ')}</b>`
+    : `5 maiores: <b>${Math.round(top5)}%</b>`;
+  const kind = (p) => p.type === 'ETF' ? 'ETF' : p.type === 'STOCK' ? 'Ação' : esc(p.type || '');
+  // "ETF · 28,00 un. · T212 e IBKR" em Todas; "ETF · 12,00 un. · mais 16,00 na T212" numa corretora
+  const sub = (p) => {
+    const q = ` · ${fmtUn(p.quantity)} un.`;
+    if (multi) return `${kind(p)}${p.parts.length > 1 ? q : `<span class="d-only">${q}</span>`} · ${p.parts.map((x) => x.tile).join(' e ')}`;
+    return `${kind(p)}${q}${p.elsewhere.length ? ' · mais ' + p.elsewhere.map((x) => `${fmtUn(x.p.quantity)} na ${x.b.tile}`).join(' e ') : ''}`;
+  };
+  const side = multi || one.id === 'ibkr' ? brokersBlock(v, list) : '';
+  el.innerHTML = brokerTabs(list) + banners + `
     <div class="lg-strip">
-      <div class="lg-bar">${order.map((p, i) => `<span style="flex-grow:${w(p)};background:${posColor(i)}" title="${esc(shortName(p))} · ${f1(w(p))}%"></span>`).join('')}</div>
-      <div class="lg-cap"><span>Peso de cada posição na carteira investida (${eur0(tot, c)})</span>
-        <span>Maior posição: <b>${esc(order[0].short)} ${f1(w(order[0]))}%</b> · 5 maiores: <b>${Math.round(top5)}%</b></span></div>
+      <div class="lg-bar">${order.map((p) => `<span style="flex-grow:${w(p)};background:${p.color}" title="${esc(shortName(p))} · ${f1(w(p))}%"></span>`).join('')}</div>
+      <div class="lg-cap"><span>${both(`Peso de cada posição ${scope} (${eur0(tot, c)}${several && !multi ? ' investidos' : ''})`, `Peso de cada posição (${eur0(tot, c)} investidos)`)}</span>
+        <span>Maior posição: <b>${esc(order[0].short)} ${f1(w(order[0]))}%</b><span class="d-only"> · ${capExtra}</span></span></div>
     </div>
     <div class="lg-body">
       <section class="card lg-table" aria-label="Posições">
-        <div class="lg-row lg-h" aria-hidden="true"><span class="c-pos">Posição</span><span class="c-pr">Preço atual</span><span class="c-val">Valor (€)</span><span class="c-pl"><span class="pl-a">Lucro / prejuízo (€)</span><span class="pl-m">Lucro</span></span><span class="c-w">Peso</span><span class="c-sec">Setor</span></div>
-        ${order.map((p, i) => `
-        <button type="button" class="lg-row${invOpen === p.ticker ? ' open' : ''}" data-open="${esc(p.ticker)}" aria-expanded="${invOpen === p.ticker}">
-          <span class="c-pos">${logoTile(p, 'sm')}<span class="lg-n"><b>${esc(shortName(p))}</b><span class="tsub">${p.type === 'ETF' ? 'ETF' : p.type === 'STOCK' ? 'Ação' : esc(p.type || '')} · ${(p.quantity || 0).toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} un.</span></span></span>
+        <div class="lg-row lg-h" aria-hidden="true"><span class="c-pos">Posição</span><span class="c-pr">${one?.id === 'ibkr' ? 'Preço (fecho)' : 'Preço atual'}</span><span class="c-val">Valor (€)</span><span class="c-pl"><span class="pl-a">Lucro / prejuízo (€)</span><span class="pl-m">Lucro</span></span><span class="c-w">Peso</span><span class="c-sec">Setor</span></div>
+        ${order.map((p) => `
+        <button type="button" class="lg-row${invOpen === p.key ? ' open' : ''}" data-open="${esc(p.key)}" data-color="${p.color}" aria-expanded="${invOpen === p.key}">
+          <span class="c-pos">${logoTile(p, 'sm')}<span class="lg-n"><b>${esc(shortName(p))}</b><span class="tsub">${sub(p)}</span></span></span>
           <span class="c-pr">${eur(p.currentPrice, cur(p.priceCcy))}</span>
           <span class="c-val"><b>${eur0(p.value, c)}</b></span>
           <span class="c-pl ${sign(p.ppl)}"><span class="pl-a">${p.ppl >= 0 ? '+' : ''}${eur0(p.ppl, c)} · </span>${pct1(p.pplPct)}</span>
-          <span class="c-w"><span class="lg-wbar"><span style="width:${w(p) / maxW * 100}%;background:${posColor(i)}"></span></span>${f1(w(p))}%</span>
+          <span class="c-w"><span class="lg-wbar"><span style="width:${w(p) / maxW * 100}%;background:${p.color}"></span></span>${f1(w(p))}%</span>
           <span class="c-sec">${esc(sectorShort(p.sector))}</span>
         </button>
-        ${invOpen === p.ticker ? rowDetail(p) : ''}`).join('')}
+        ${invOpen === p.key ? rowDetail(p) : ''}`).join('')}
       </section>
-      <aside class="card lg-rail" aria-label="Distribuição">${railHtml(order, tot, c)}</aside>
+      <aside class="card lg-rail${side ? ' has-ib' : ''}" aria-label="Distribuição">${side}<div class="lg-sect">${railHtml(order, tot, c, multi ? 'da carteira junta' : several ? 'desta conta' : 'da carteira')}</div></aside>
     </div>`;
 }
 
@@ -1705,12 +1913,14 @@ function railGroups(order) {
   const color = (k) => mode === 'type' ? (k === 'Ações' ? CAT.acoes.color : k === 'ETFs' ? CAT.etf.color : '#94a3b8') : (k === 'Ouro e matérias-primas' ? '#facc15' : sectorColor(k));
   return Object.entries(by).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ k, v, color: color(k) }));
 }
-function railHtml(order, tot, c) {
+function railHtml(order, tot, c, scope = 'da carteira') {
   const g = railGroups(order), pc = (v) => (v / tot * 100).toFixed(1).replace('.', ',').replace(/,0$/, '');
-  const topG = g[0], topP = order[0], topPw = topP.value / tot * 100, typeMode = pieMode === 'type';
+  const topG = g[0], topP = order[0], typeMode = pieMode === 'type';
+  const inTop = order.filter((p) => (p.sector || 'Sem setor') === topG.k);
   const note = typeMode
     ? `<span class="lg-note-t">Mistura.</span> ${esc(topG.k)} pesa ${pc(topG.v)}% do que tens investido.`
-    : `<span class="lg-note-t${topG.v / tot > 0.5 ? ' warn' : ''}">Concentração.</span> ${esc(topG.k)} pesa ${pc(topG.v)}% da carteira; ${esc(shortName(topP))} sozinha vale ${pc(topP.value)}%.`;
+    : `<span class="lg-note-t${topG.v / tot > 0.5 ? ' warn' : ''}">Concentração.</span> ${esc(topG.k)} pesa ${pc(topG.v)}% ${scope}` +
+      (inTop.length === 1 ? `, tudo em ${esc(inTop[0].short)}.` : `; ${esc(shortName(topP))} sozinha vale ${pc(topP.value)}%.`);
   return `
     <div class="lg-rail-h"><h2 class="lg-rail-t">${typeMode ? 'Tipos' : 'Setores'}</h2>
       <div class="seg" role="tablist" aria-label="Agrupar por">
@@ -1722,18 +1932,51 @@ function railHtml(order, tot, c) {
     <div class="lg-note">${note}</div>`;
 }
 
-// Linha aberta: custo médio face ao preço, dividendos e o efeito no IRS se vendesses hoje
+// Coluna da direita, por cima dos setores.
+// Todas: valor e dinheiro livre de cada corretora (a IBKR com as moedas e o câmbio). Só a IBKR: o dinheiro moeda a moeda.
+const CCY_NAME = { EUR: 'Euros', USD: 'Dólares', GBP: 'Libras', CHF: 'Francos suíços', CAD: 'Dólares canadianos', JPY: 'Ienes', HKD: 'Dólares de Hong Kong' };
+const ccySymbol = (c) => { try { return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: c }).formatToParts(0).find((x) => x.type === 'currency').value; } catch { return c; } };
+function brokersBlock(v, list) {
+  const ib = v.shown.find((b) => b.id === 'ibkr');
+  const fxDay = ib ? ddmm(ib.d.fxDate || ib.d.statementDate) : '';
+  const foreign = ib ? (ib.d.cash || []).filter((x) => x.ccy !== 'EUR') : [];
+  const money = (x) => `<span class="${x.amount < 0 ? 'neg' : ''}">${eur(x.amount, x.ccy)}</span>`;
+  if (v.shown.length === 1 && ib) {
+    const rows = (ib.d.cash || []).map((x) => `<div class="cash-r"><span>${CCY_NAME[x.ccy] || x.ccy}</span><b>${money(x)}</b>${x.ccy === 'EUR' ? ''
+      : `<span class="tsub">≈ ${eur0(x.eur)} ao câmbio de ${fxDay}${x.eur ? ` (1 € = ${(x.amount / x.eur).toLocaleString('pt-PT', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} ${esc(ccySymbol(x.ccy))})` : ''}</span>`}</div>`).join('');
+    return `<div class="ib-rail"><h2 class="lg-rail-t">Dinheiro na IBKR</h2>
+      ${rows ? `<div class="cash">${rows}</div>` : ''}
+      <div class="ib-tot"><span>Total livre em euros</span><b>${eur0(ib.d.freeEUR ?? 0)}</b></div></div>`;
+  }
+  const rows = list.map((b) => `<div class="ib-row"><span class="ib-tag">${b.tile}</span>
+      <span class="ib-rn"><b>${b.full}</b><span class="tsub ib-ok ${b.fresh.tone}">${b.fresh.long}</span></span>
+      <span class="ib-rv"><b>${b.ok ? eur0(b.d.totalEUR) : '–'}</b>${b.ok ? `<span class="tsub">${eur0(b.d.freeEUR ?? b.d.free ?? 0)} livres</span>` : ''}</span></div>`).join('');
+  const fxLine = foreign.length ? `<div class="ib-fx"><span class="tsub">Dinheiro na IBKR: ${(ib.d.cash || []).map(money).join(' e ')} (≈ ${eur0(foreign.reduce((s, x) => s + x.eur, 0))} ao câmbio de ${fxDay})</span></div>` : '';
+  return `<div class="ib-rail"><h2 class="lg-rail-t">Corretoras</h2>${rows}${fxLine}
+    <div class="ib-tot"><span>Dinheiro livre${v.shown.length === 2 ? ' nas duas' : ''}</span><b>${eur0(v.free)}</b></div></div>`;
+}
+
+// Linha aberta: onde está (se estiver nas duas corretoras), custo médio face ao preço, dividendos e o efeito no IRS se vendesses hoje
+const DIV_SUB = { acumula: 'Não paga, reinveste' };
 function rowDetail(p) {
-  const c = sum.broker.currency, pc = cur(p.priceCcy), up = p.currentPrice >= p.averagePrice;
+  const c = 'EUR', pc = cur(p.priceCcy), up = p.averagePrice == null || p.currentPrice >= p.averagePrice;
+  const split = p.parts && p.parts.length > 1;
   const d = p.dividend || { status: 'desconhecido' };
   const divTxt = d.status === 'paga' ? `${cap(d.freq || 'Paga')}${d.months ? ' · ' + d.months : ''}` : DIV_LABEL[d.status];
   const taxNote = p.ppl < 0
     ? `Se vendesses hoje, os ${eur0(p.ppl, c)} entravam no anexo J e compensavam mais-valias do mesmo ano.`
     : p.ppl > 0 ? `Se vendesses hoje, pagavas cerca de ${eur0(p.ppl * TAX, c)} (28% de ${eur0(p.ppl, c)}) no anexo J.` : 'Sem lucro nem prejuízo em aberto.';
-  return `<div class="lg-detail">
-      <div><span class="tsub">Custo médio</span><b>${eur(p.averagePrice, pc)}</b><span class="tsub ${up ? 'pos' : 'neg'}">preço ${pct1((p.currentPrice / p.averagePrice - 1) * 100)} ${up ? 'acima' : 'abaixo'}</span></div>
-      <div><span class="tsub">Dividendos</span><b>${esc(divTxt)}</b></div>
-      <div class="lg-tax"><span class="tsub">Impostos</span><span>${taxNote}</span></div>
+  const parts = split ? `<div class="lg-split"><span class="tsub">Onde está</span>${p.parts.map((x) => {
+    const cm = x.averagePrice != null ? `custo médio ${eur(x.averagePrice, cur(x.priceCcy))}` : '';
+    return `<div class="lg-sp"><span class="ib-tag">${x.tile}</span>
+      <span>${fmtUn(x.quantity)} un.<span class="d-only">${cm ? ' · ' + cm : ''} <span class="tsub">· ${x.fresh}</span></span><span class="m-only"> · ${eur0(x.value, c)}</span></span>
+      <b class="sp-v d-only">${eur0(x.value, c)}</b><span class="sp-pl ${sign(x.ppl)}">${x.ppl >= 0 ? '+' : ''}${eur0(x.ppl, c)}</span>
+      <span class="sp-meta tsub m-only">${[cm, x.fresh].filter(Boolean).join(' · ')}</span></div>`;
+  }).join('')}</div>` : '';
+  return `<div class="lg-detail${split ? ' has-split' : ''}">${parts}
+      <div><span class="tsub">Custo médio${split ? '<span class="d-only"> (junto)</span>' : ''}</span><b>${p.averagePrice != null ? eur(p.averagePrice, pc) : '–'}</b>${p.averagePrice ? `<span class="tsub ${up ? 'pos' : 'neg'}"><span class="d-only">preço </span>${pct1((p.currentPrice / p.averagePrice - 1) * 100)} ${up ? 'acima' : 'abaixo'}</span>` : ''}</div>
+      <div><span class="tsub">Dividendos</span><b>${esc(divTxt)}</b>${DIV_SUB[d.status] ? `<span class="tsub d-only">${DIV_SUB[d.status]}</span>` : ''}</div>
+      <div class="lg-tax"><span class="tsub">Impostos</span><span>${taxNote}${split ? '<span class="d-only"> Cada corretora declara o seu lote, com o seu custo.</span>' : ''}</span></div>
     </div>`;
 }
 
@@ -2582,6 +2825,8 @@ function cashSources() {
   const list = [];
   const br = sum?.broker;
   if (br && !br.error) list.push({ key: 't212', label: 'Trading 212', sub: 'dinheiro livre', available: Math.max(0, br.freeEUR ?? br.free ?? 0) });
+  const ib = sum?.ibkr;
+  if (ib && (!ib.error || ib.stale) && ib.freeEUR != null) list.push({ key: 'ibkr', label: 'IBKR', sub: 'dinheiro livre', available: Math.max(0, ib.freeEUR) });
   for (const a of state.assets || []) if (a.type === 'conta' && (a.value || 0) > 0) list.push({ key: 'a:' + a.id, label: a.name, sub: a.entity || 'conta', available: a.value });
   return list;
 }
@@ -2678,7 +2923,7 @@ function renderGoals() {
   }
   const main = goals.find((g) => g.primary) || goals[0], rest = goals.filter((g) => g !== main);
   const v = goalNow(main), k = GOAL_KIND[main.kind] || GOAL_KIND.outro;
-  const invest = sum?.broker && !sum.broker.error ? Math.max(0, (sum.broker.totalEUR || 0) - (sum.broker.free || 0)) : 0;
+  const invest = [sum?.broker, sum?.ibkr].reduce((s, b) => s + (b && (!b.error || b.stale) ? Math.max(0, (b.totalEUR || 0) - (b.freeEUR ?? b.free ?? 0)) : 0), 0);
   const scen = [];
   if (v.need > 0 && main.monthly > 0) scen.push(`<div class="g-scen warn"><span class="tsub"><i style="background:#f5b84b"></i>Ao ritmo atual</span><b>${eur0(main.monthly)}/mês → ${idxLabel(v.paceEnd)}</b></div>`);
   if (v.required != null) scen.push(`<div class="g-scen"><span class="tsub"><i style="background:#3ddc97"></i>Para cumprir o prazo</span><b>${eur0(Math.ceil(v.required / 10) * 10)}/mês → ${idxLabel(v.deadline)}</b></div>`);
